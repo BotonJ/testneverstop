@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+
+# 输出与日志文件
+*.log
+output/
+log/
+
+# 大型数据文件
+*.xlsx
+*.zip
+*.rar
+
+# 编辑器配置
+.vscode/
+.idea/
