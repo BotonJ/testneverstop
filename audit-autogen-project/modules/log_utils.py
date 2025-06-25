@@ -1,7 +1,6 @@
-def log_write(log, status, subject, detail=""):
-    print(f"📝 log_write触发: {status}, {subject}, {detail}")  # 临时调试
+def log_write(log, status, subject, detail=""):    
     if status == "success":
-        log.append(f"✅ {subject} {detail}")
+        log.append(f"✅ {subject} {detail}")        
     elif status == "skip":
         log.append(f"⚠️ 跳过：{subject} {detail}")
     elif status == "error":

@@ -25,7 +25,7 @@ def parse_skip_rows(value):
             rows.append(int(item))
     return rows
 
-def load_mapping_file(path):
+def load_mapping_file(path):    
     wb = openpyxl.load_workbook(path, data_only=True)
     # blocks 区块
     block_sheet = wb["资产负债表区块"]
@@ -111,9 +111,7 @@ def load_mapping_file(path):
                     entry["target_cells"]["业务活动表"].append(coord)
                 except Exception as e:
                     print(f"⚠️ 非法单元格坐标: '{cell}' 被跳过 → {e}")
-            header_meta[str(name).strip()] = entry            
-    # ✅ HeaderMapping 逻辑结束
-    # ✅ 返回结果写在函数内部
+            header_meta[str(name).strip()] = entry           
     return {
         "blocks": blocks,
         "subject_alias_map": alias_map,

@@ -21,7 +21,8 @@ def run_full_injection(mapping_file, source_file, template_file, output_file, lo
     inject_table2(wb_src, ws_tgt, conf2, df2, log=log)
     inject_table3(wb_src, ws_tgt, conf3, df3, log=log)
     inject_formula_sheet(ws_tgt, mapping_file, log=log)
+   
+    summary_values = {}
 
     wb_tgt.save(output_file)
-    print(f"✅ 所有表格已写入：{output_file}")
-   
+    return summary_values

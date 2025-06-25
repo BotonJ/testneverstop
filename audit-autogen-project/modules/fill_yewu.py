@@ -1,4 +1,6 @@
 from modules.log_utils import log_write
+#ws_src_yewu = wb_src["2021业务活动表"]
+#ws_yewu = wb_final["2021业务活动表"]
 
 def fill_yewu_by_mapping(ws_src, ws_tgt, yewu_mapping, prev_ws=None, net_asset_fallback=None, log=None):
     if log is not None:
@@ -9,13 +11,12 @@ def fill_yewu_by_mapping(ws_src, ws_tgt, yewu_mapping, prev_ws=None, net_asset_f
         src_final = item.get("源期末坐标")
         tgt_initial = item.get("目标期初坐标")
         tgt_final = item.get("目标期末坐标")
-        is_calc = str(item.get("是否计算", "")).strip() == "是"
-
+        is_calc = str(item.get("是否计算", "")).strip() == "是"    
         # 归档前补: 连续前一年的期末值
         if prev_ws and tgt_initial and tgt_final:
             try:
                 prev_val = prev_ws[tgt_final].value
-                ws_tgt[tgt_initial].value = prev_val
+                ws_tgt[tgt_initial].value = prev_val                
             except Exception as e:
                 print(f"⚠️ 行列前年期末补充失败: {field}, {e}")
 
@@ -61,6 +62,12 @@ def fill_yewu_by_mapping(ws_src, ws_tgt, yewu_mapping, prev_ws=None, net_asset_f
                 ws_tgt[tgt_final].value = ws_src[src_final].value
             except Exception as e:
                 print(f"⚠️ 期末写入失败: {field}, {e}")
+            if field in ["收 入 合 计", "费 用 合 计", "收支结余"]:
+                try:
+                    val = ws_tgt[tgt_final].value
+                    log_write(log, "success", f"{ws_tgt.title} {field}", f"期末={val}")
+                except Exception as e:
+                    log_write(log, "error", f"{ws_tgt.title} {field}", f"读取失败: {e}")
 
         # 无误情况下输出日志
         if log:
