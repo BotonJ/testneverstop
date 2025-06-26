@@ -1,6 +1,13 @@
 from modules.log_utils import log_write
-#ws_src_yewu = wb_src["2021业务活动表"]
-#ws_yewu = wb_final["2021业务活动表"]
+from openpyxl.utils.cell import coordinate_from_string, column_index_from_string
+
+def safe_read(ws, cell_ref):
+    try:
+        col_letter, row = coordinate_from_string(cell_ref)
+        col = column_index_from_string(col_letter)
+        return ws.cell(row=row, column=col).value
+    except Exception:
+        return "-"
 
 def fill_yewu_by_mapping(ws_src, ws_tgt, yewu_mapping, prev_ws=None, net_asset_fallback=None, log=None):
     if log is not None:
@@ -71,6 +78,6 @@ def fill_yewu_by_mapping(ws_src, ws_tgt, yewu_mapping, prev_ws=None, net_asset_f
 
         # 无误情况下输出日志
         if log:
-            val_i = ws_src[src_initial].value if src_initial else "-"
-            val_f = ws_src[src_final].value if src_final else "-"
+            val_i = safe_read(ws_src, src_initial)
+            val_f = safe_read(ws_src, src_final)
             log_write(log, "success", field, f"期初={val_i}, 期末={val_f} → {tgt_initial}, {tgt_final}")

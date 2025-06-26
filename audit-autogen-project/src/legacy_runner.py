@@ -17,7 +17,15 @@ def run_main_injection():
     project_root = Path(__file__).resolve().parents[1]
     mapping_path = project_root / "data" / "mapping_file.xlsx"
     mapping = load_mapping_file(mapping_path)
-    df_yewu = mapping.get("yewu_line_map")
+    df_yewu = mapping.get("yewu_mapping")
+
+    alias_dict = {}
+    for std, aliases in mapping["subject_alias_map"].items():
+        std = std.strip()
+        if not isinstance(aliases, list):
+            aliases = [aliases]
+        for alias in [std] + aliases:
+            alias_dict[alias.strip()] = std
 
     wb_src_path = project_root / "data" / "soce.xlsx"
     wb_tgt_path = project_root / "data" / "t.xlsx"
@@ -29,8 +37,7 @@ def run_main_injection():
                         level=logging.INFO,
                         format="%(asctime)s [%(levelname)s] %(message)s")
 
-    log_balance, log_yewu = [], []
-    alias_dict = {a: k for k, v in mapping["subject_alias_map"].items() for a in [k] + v}
+    log_balance, log_yewu = [], []    
     wb_src = load_workbook(wb_src_path, data_only=True)
     wb_tgt = load_workbook(wb_tgt_path,)
     prev_ws_yewu = None
@@ -43,13 +50,18 @@ def run_main_injection():
             ws_balance = wb_tgt.copy_worksheet(wb_tgt["资产负债表"])
             ws_balance.title = f"{year}资产负债表"
             fill_balance_sheet_by_name(ws_src, ws_balance, alias_dict, log_balance, skip_list=[])
-            render_header(wb_tgt, sheet_name=ws_balance.title, year=year, header_meta=mapping["header_meta"])
+            
+            if "header_meta" in mapping:
+                render_header(wb_tgt, sheet_name=ws_balance.title, year=year, header_meta=mapping["header_meta"])
+            else:
+                print("⚠️ mapping 中缺少 header_meta，跳过 render_header() 调用")
 
             if f"{year}业务活动表" in wb_src.sheetnames:
                 ws_src_yewu = wb_src[f"{year}业务活动表"]
                 ws_yewu = wb_tgt.copy_worksheet(wb_tgt["业务活动表"])
-                ws_yewu.title = f"{year}业务活动表"
-                core_data = get_balance_core_data(ws_balance, mapping["blocks"], mapping["subject_alias_map"])
+                ws_yewu.title = f"{year}业务活动表"          
+                
+                core_data = get_balance_core_data(ws_balance, mapping["blocks"], alias_dict)
                 net_asset_fallback = {
                     "期初": core_data.get("期初净资产总额", 0),
                     "期末": core_data.get("期末净资产总额", 0)

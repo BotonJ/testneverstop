@@ -21,7 +21,7 @@ class StrictUndefined(Undefined):
     def __str__(self):
         raise ValueError(f"Template variable '{self._undefined_name}' is not defined.")
 
-def render_text_template_from_mapping(mapping_path, summary_values):
+def render_text_template_from_mapping(mapping_path, summary_values,alias_dict=None):
     """
     根据 text_mapping 表中标记为“文字模板”的字段，提取模板并渲染。
     """
@@ -41,7 +41,13 @@ def render_text_template_from_mapping(mapping_path, summary_values):
         k: v if v is not None and str(v).strip() != "" else "【未提取】"
         for k, v in summary_values.items()
     }
-
+    if alias_dict:
+        alias_extended = {}
+        for k, v in cleaned_summary_values.items():
+            alias_k = alias_dict.get(k, None)
+            if alias_k and alias_k not in cleaned_summary_values:
+                alias_extended[alias_k] = v
+        cleaned_summary_values.update(alias_extended)
     try:
         # Use a more robust Jinja2 environment
         env = Environment(undefined=StrictUndefined) # Use StrictUndefined for better debugging

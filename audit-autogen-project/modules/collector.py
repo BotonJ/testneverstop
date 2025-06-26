@@ -16,6 +16,14 @@ def collect_summary_values(mapping_path, output_path):
     """
     summary = {}
     mapping = load_mapping_file(mapping_path)
+    # ✅ 插入 alias_dict 构造逻辑（反向映射）
+    raw_alias_map = mapping["subject_alias_map"]
+    alias_dict = {}
+    for std, aliases in raw_alias_map.items():
+        std_norm = std.strip()
+        for alias in [std_norm] + aliases:
+            alias_norm = alias.strip()
+            alias_dict[alias_norm] = std_norm
     try:
         mapping_wb = load_workbook(mapping_path, data_only=True)
         header_ws = mapping_wb["HeaderMapping"]
@@ -42,9 +50,8 @@ def collect_summary_values(mapping_path, output_path):
             block_map = mapping["blocks"]
             print("🧾 当前 block_map 内容如下：")
             print(json.dumps(block_map, ensure_ascii=False, indent=2))                
-            start_data = get_balance_core_data(wb[start_sheet], block_map, mapping["subject_alias_map"])
-            end_data = get_balance_core_data(wb[end_sheet], block_map, mapping["subject_alias_map"])
-            
+            start_data = get_balance_core_data(wb[start_sheet], block_map, alias_dict)
+            end_data = get_balance_core_data(wb[end_sheet], block_map, alias_dict)
 
             # Log core data for debugging
             logging.info(f"Start Sheet Data ({start_sheet}): {start_data}")
