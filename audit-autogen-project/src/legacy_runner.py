@@ -18,6 +18,8 @@ def run_main_injection():
     mapping_path = project_root / "data" / "mapping_file.xlsx"
     mapping = load_mapping_file(mapping_path)
     df_yewu = mapping.get("yewu_mapping")
+    #print(f"Loaded mapping keys: {mapping.keys()}") # 打印所有顶层键
+    #print(f"yewu_line_map value in legacy_runner: {mapping.get('yewu_line_map')}") # 安全获取并打印 yewu_mapping 的值
 
     alias_dict = {}
     for std, aliases in mapping["subject_alias_map"].items():
@@ -69,7 +71,7 @@ def run_main_injection():
                 fill_yewu_by_mapping(
                     ws_src_yewu,
                     ws_yewu,
-                    df_yewu,
+                    mapping["yewu_line_map"], 
                     prev_ws=prev_ws_yewu,
                     net_asset_fallback=net_asset_fallback,
                     log=log_yewu
@@ -81,4 +83,14 @@ def run_main_injection():
         if tmpl_sheet in wb_tgt.sheetnames:
             wb_tgt.remove(wb_tgt[tmpl_sheet])
 
+    output_path = os.path.join("output", "output.xlsx")
+    # 确保删除旧文件（输出前始终清空并覆盖 output.xlsx 的内容）
+    if os.path.exists(output_path):
+        try:
+            os.remove(output_path)
+            #print(f"🗑️ 旧版 output.xlsx 已删除")
+        except Exception as e:
+            print(f"⚠️ 无法删除旧文件: {e}")
+
     wb_tgt.save(output_path)
+    #print(f"✅ 新版 output.xlsx 已保存至: {output_path}")

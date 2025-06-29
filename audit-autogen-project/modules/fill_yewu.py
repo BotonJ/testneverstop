@@ -9,10 +9,10 @@ def safe_read(ws, cell_ref):
     except Exception:
         return "-"
 
-def fill_yewu_by_mapping(ws_src, ws_tgt, yewu_mapping, prev_ws=None, net_asset_fallback=None, log=None):
+def fill_yewu_by_mapping(ws_src, ws_tgt,yewu_line_map,prev_ws=None, net_asset_fallback=None, log=None):
     if log is not None:
         log.append("✅ fill_yewu_by_mapping 已启动")       
-    for item in yewu_mapping:
+    for item in yewu_line_map:
         field = item.get("字段名")
         src_initial = item.get("源期初坐标")
         src_final = item.get("源期末坐标")
@@ -31,8 +31,8 @@ def fill_yewu_by_mapping(ws_src, ws_tgt, yewu_mapping, prev_ws=None, net_asset_f
         if is_calc:
             if "收支结余" in str(field):
                 try:
-                    income_coord = next((i["目标期末坐标"] for i in yewu_mapping if str(i["字段名"]).strip() == "收 入 合 计"), None)
-                    expense_coord = next((i["目标期末坐标"] for i in yewu_mapping if str(i["字段名"]).strip() == "费 用 合 计"), None)
+                    income_coord = next((i["目标期末坐标"] for i in yewu_line_map if str(i["字段名"]).strip() == "收 入 合 计"), None)
+                    expense_coord = next((i["目标期末坐标"] for i in yewu_line_map if str(i["字段名"]).strip() == "费 用 合 计"), None)
                     income = ws_tgt[income_coord].value if income_coord else None
                     expense = ws_tgt[expense_coord].value if expense_coord else None
                     income = float(income) if income not in (None, "") else 0

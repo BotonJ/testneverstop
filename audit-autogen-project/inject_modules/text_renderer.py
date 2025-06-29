@@ -74,7 +74,7 @@ def inject_text_to_excel(file_path, sheet_name="汇总区块", cell="K1", text="
 
         ws[cell] = text
         wb.save(file_path)
-        logging.info(f"Text successfully injected to {sheet_name}!{cell} in {file_path}")
+        #logging.info(f"Text successfully injected to {sheet_name}!{cell} in {file_path}")
     except Exception as e:
         logging.error(f"Error injecting text to excel {file_path} - {sheet_name}!{cell}: {e}")
 
@@ -93,7 +93,7 @@ def inject_summary_values_debug(file_path, summary_values, sheet_name="元数据
                     cell.value = None
         else:
             ws = wb.create_sheet(sheet_name)
-            logging.info(f"Created new debug sheet: {sheet_name}")
+            #logging.info(f"Created new debug sheet: {sheet_name}")
 
         ws.cell(1, 1, "字段名")
         ws.cell(1, 2, "对应值")
@@ -102,6 +102,6 @@ def inject_summary_values_debug(file_path, summary_values, sheet_name="元数据
             ws.cell(idx + 2, 2, v)
 
         wb.save(file_path)
-        logging.info(f"Summary values injected to debug sheet '{sheet_name}' in {file_path}")
+        #logging.info(f"Summary values injected to debug sheet '{sheet_name}' in {file_path}")
     except Exception as e:
         logging.error(f"Error injecting summary values to debug sheet {file_path} - {sheet_name}: {e}")

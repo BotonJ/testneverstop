@@ -1,9 +1,64 @@
-from .log_utils import log_write_text
+# File: inject_modules/table1.py
+
+from openpyxl.utils.cell import coordinate_to_tuple, get_column_letter
+import logging
+
+# Configure logging for debugging in this module
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+
+def _get_top_left_merged_cell_address(ws, a1_address_str):
+    """
+    Given a worksheet and an A1-style cell address string,
+    returns the A1-style address of the top-left cell of the merged region it belongs to.
+    If the cell is not merged, returns the original address.
+    """
+    if not isinstance(a1_address_str, str) or not a1_address_str: # Added check for empty string
+        logging.warning(f"无效或空的单元格地址: '{a1_address_str}'. 跳过合并单元格检查.")
+        return a1_address_str
+
+    try:
+        row, col = coordinate_to_tuple(a1_address_str)
+        target_coord = (row, col)
+    except Exception as e:
+        logging.error(f"解析A1地址 '{a1_address_str}' 失败: {e}. 返回原始地址.")
+        return a1_address_str
+
+    for merged_range in ws.merged_cells.ranges:
+        # Check if the target cell (row, col) is within this merged range
+        if target_coord[0] >= merged_range.min_row and target_coord[0] <= merged_range.max_row and \
+           target_coord[1] >= merged_range.min_col and target_coord[1] <= merged_range.max_col:
+
+            # Get the top-left coordinates of the merged range
+            min_col, min_row, max_col, max_row = merged_range.bounds
+            top_left_address = f"{get_column_letter(min_col)}{min_row}"
+            if top_left_address != a1_address_str: # Log only if redirection happens
+                logging.info(f"单元格 '{a1_address_str}' 属于合并区域 '{merged_range.coord}'. 将写入到左上角单元格: '{top_left_address}'")
+            return top_left_address
+    # If not part of any merged region, return the original address
+    return a1_address_str
+
+
 def inject_table1(wb_src, ws_tgt, conf, df_map, log=None):
+    logging.info("进入 inject_table1 函数")
     start_sheet = conf.get("start_sheet")
     end_sheet = conf.get("end_sheet")
-    ws_src_init = wb_src[start_sheet]
-    ws_src_final = wb_src[end_sheet]
+    
+    if not start_sheet or not end_sheet:
+        logging.error("Table 1 配置中缺少 'start_sheet' 或 'end_sheet'. 跳过注入.")
+        # Assuming log_write_text is defined elsewhere or passed in 'log'
+        # if log:
+        #     log_write_text(log, "error", "Table1", "", "", "配置错误: 缺少起止Sheet")
+        return
+
+    try:
+        ws_src_init = wb_src[start_sheet]
+        ws_src_final = wb_src[end_sheet]
+    except KeyError as e:
+        logging.error(f"无法找到源工作表: {e}. 请检查 output.xlsx 中的 sheet 名称.")
+        # if log:
+        #     log_write_text(log, "error", "Table1", "", "", f"源Sheet不存在: {e}")
+        return
 
     for idx, row in df_map.iterrows():
         src_field = str(row["来源字段"]).strip()
@@ -12,23 +67,77 @@ def inject_table1(wb_src, ws_tgt, conf, df_map, log=None):
         var_cell = str(row.get("变动单元格", "")).strip()
         var_formula = str(row.get("变动公式", "")).strip()
 
+        # Handle empty/NaN values from mapping gracefully
+        if not src_field:
+            logging.warning(f"df_map 第 {idx+1} 行 '来源字段' 为空，跳过此行.")
+            continue
+        # Only skip if ALL target cells are empty, allowing partial configurations
+        if not tgt_init_cell and not tgt_final_cell and not var_cell:
+            logging.warning(f"df_map 第 {idx+1} 行所有目标单元格配置（期初、期末、变动）均为空，跳过此行.")
+            continue
+
         val_init, val_final = None, None
-        for i in range(1, 100):
-            name = ws_src_init[f"A{i}"].value
+        
+        # Search for initial value in ws_src_init
+        found_init = False
+        for r_search in range(1, ws_src_init.max_row + 1):
+            name = ws_src_init.cell(row=r_search, column=1).value # Assuming source field is in column A (1)
             if name and src_field in str(name):
-                val_init = ws_src_init[f"B{i}"].value
+                val_init = ws_src_init.cell(row=r_search, column=2).value # Assuming value is in column B (2)
+                logging.debug(f"在 {start_sheet}!A{r_search} 找到 '{src_field}', 期初值: {val_init}")
+                found_init = True
                 break
-        for i in range(1, 100):
-            name = ws_src_final[f"A{i}"].value
+        if not found_init:
+            logging.warning(f"未在 {start_sheet} 中找到 '来源字段': '{src_field}'. 期初值设为 None.")
+
+        # Search for final value in ws_src_final
+        found_final = False
+        for r_search in range(1, ws_src_final.max_row + 1):
+            name = ws_src_final.cell(row=r_search, column=1).value # Assuming source field is in column A (1)
             if name and src_field in str(name):
-                val_final = ws_src_final[f"C{i}"].value
+                val_final = ws_src_final.cell(row=r_search, column=3).value # Assuming value is in column C (3)
+                logging.debug(f"在 {end_sheet}!A{r_search} 找到 '{src_field}', 期末值: {val_final}")
+                found_final = True
                 break
+        if not found_final:
+            logging.warning(f"未在 {end_sheet} 中找到 '来源字段': '{src_field}'. 期末值设为 None.")
 
-        ws_tgt[tgt_init_cell] = val_init
-        ws_tgt[tgt_final_cell] = val_final
 
-        if var_cell and var_formula:
-            ws_tgt[var_cell] = var_formula
+        # --- 写入目标单元格 ---
+        try:
+            # Inject initial value
+            if tgt_init_cell:
+                actual_init_cell = _get_top_left_merged_cell_address(ws_tgt, tgt_init_cell)
+                ws_tgt[actual_init_cell] = val_init
+                logging.info(f"注入 Table1 期初值: '{val_init}' 到 '{actual_init_cell}' (原: {tgt_init_cell})")
+                # if log: log_write_text(log, "success", src_field, "期初", val_init, f"写入到 {actual_init_cell}")
 
-        if log is not None:            
-            log_write_text(log, "success",  src_field, val_init, val_final, f"写入 {tgt_init_cell}/{tgt_final_cell}")
+            # Inject final value
+            if tgt_final_cell:
+                actual_final_cell = _get_top_left_merged_cell_address(ws_tgt, tgt_final_cell)
+                ws_tgt[actual_final_cell] = val_final
+                logging.info(f"注入 Table1 期末值: '{val_final}' 到 '{actual_final_cell}' (原: {tgt_final_cell})")
+                # if log: log_write_text(log, "success", src_field, "期末", val_final, f"写入到 {actual_final_cell}")
+
+            # Inject variance formula or value
+            if var_cell:
+                actual_var_cell = _get_top_left_merged_cell_address(ws_tgt, var_cell)
+                if var_formula:
+                    ws_tgt[actual_var_cell] = var_formula
+                    logging.info(f"注入 Table1 变动公式: '{var_formula}' 到 '{actual_var_cell}' (原: {var_cell})")
+                    # if log: log_write_text(log, "success", src_field, "变动", var_formula, f"写入公式到 {actual_var_cell}")
+                else:
+                    # Calculate difference if no formula is provided
+                    num_init = float(val_init) if val_init not in [None, "", 0] else 0.0 # Treat 0 as valid number
+                    num_final = float(val_final) if val_final not in [None, "", 0] else 0.0 # Treat 0 as valid number
+                    
+                    diff = num_final - num_init
+                    ws_tgt[actual_var_cell] = diff
+                    logging.info(f"注入 Table1 变动值 (计算): '{diff}' 到 '{actual_var_cell}' (原: {var_cell})")
+                    # if log: log_write_text(log, "success", src_field, "变动", diff, f"写入值到 {actual_var_cell}")
+
+        except Exception as e:
+            logging.error(f"注入 Table1 数据到目标单元格时出错，来源字段: '{src_field}'. 错误: {e}")
+            # if log: log_write_text(log, "error", src_field, "注入", "N/A", f"注入失败: {e}")
+            # Re-raise to propagate the error up to main_runner for overall error handling
+            raise

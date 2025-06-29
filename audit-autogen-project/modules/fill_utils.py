@@ -18,7 +18,7 @@ def fill_balance_block(ws_src, ws_tgt, blocks, alias_map):
             tgt_init_col = block_conf.get("target_col_initial")
             tgt_final_col = block_conf.get("target_col_final")
             if None in [src_init_col, src_final_col, tgt_init_col, tgt_final_col]:
-                logging.warning(f"⚠️ 缺少列配置信息，跳过区块: {block_name}")
+                #logging.warning(f"⚠️ 缺少列配置信息，跳过区块: {block_name}")
                 continue
             subject_cell = row[0].value
             if not subject_cell or not isinstance(subject_cell, str):

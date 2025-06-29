@@ -1,6 +1,9 @@
 from openpyxl import load_workbook
 from openpyxl.utils.cell import get_column_letter
 import pandas as pd
+import logging
+
+summary_fields = {}
 
 def _inject_summary_fuzzy(subjects_whitelist, ws_tgt, sheets_to_process, wb_src, conf):
     row_offset = 2
@@ -29,7 +32,16 @@ def _inject_summary_fuzzy(subjects_whitelist, ws_tgt, sheets_to_process, wb_src,
                     col_cursor += 1
 
                 col = subject_col_map[matched_name]
-                ws_tgt.cell(row=row_tgt, column=col).value = float(value)
+                #ws_tgt.cell(row=row_tgt, column=col).value = float(value)以下为测试代码：
+                try:
+                    cell = ws_tgt.cell(row=row_tgt, column=col)
+                    if cell.__class__.__name__ == "MergedCell":
+                        raise ValueError(f"单元格 ({row_tgt}, {col}) 是合并单元格，无法赋值")
+
+                    cell.value = float(value)
+                    cell.number_format = '#,##0.00'
+                except Exception as e:
+                    logging.error(f"❌ 写入失败：{row_tgt=}, {col=}, value={value}，错误: {e}")
                 ws_tgt.cell(row=row_tgt, column=col).number_format = '#,##0.00'
 
     last_col = max(subject_col_map.values(), default=col_offset)
@@ -77,4 +89,24 @@ def inject_income_expense_all(mapping_file, source_file, wb_tgt):
     ws_expense = wb_tgt.create_sheet("支出汇总")
     _inject_summary_fuzzy(expense_subjects, ws_expense, sheets_to_process, wb_src, conf)
 
-    print("✅ 收入/支出汇总已写入")
+    summary_fields = extract_income_expense_summary(ws_income, ws_expense)
+    return summary_fields
+
+def extract_income_expense_summary(ws_income, ws_expense):
+    result = {}
+
+    def get_total(ws):
+        for row in ws.iter_rows(min_row=2):
+            if row[0].value and "合计" in str(row[0].value):
+                return row[-1].value if isinstance(row[-1].value, (int, float)) else 0.0
+        return 0.0
+
+    income_total = get_total(ws_income)
+    expense_total = get_total(ws_expense)
+    balance = round(income_total - expense_total, 2)
+
+    result["收入汇总"] = income_total
+    result["支出汇总"] = expense_total
+    result["收支结余汇总"] = balance
+
+    return result
