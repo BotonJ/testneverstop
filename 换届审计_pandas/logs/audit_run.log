@@ -1,0 +1,94 @@
+2025-07-11 17:27:58,184 - AuditReportLogger - INFO - main.run_audit_report:22 - ========================================
+2025-07-11 17:27:58,185 - AuditReportLogger - INFO - main.run_audit_report:23 - ===    自动化审计报告生成流程启动    ===
+2025-07-11 17:27:58,185 - AuditReportLogger - INFO - main.run_audit_report:24 - ========================================
+2025-07-11 17:27:58,185 - AuditReportLogger - INFO - main.run_audit_report:32 - 源文件路径: D:\python脚本合集\审计自动化\my_github_repos\换届审计_pandas\data\soce.xlsx
+2025-07-11 17:27:58,185 - AuditReportLogger - INFO - main.run_audit_report:33 - 映射文件路径: D:\python脚本合集\审计自动化\my_github_repos\换届审计_pandas\data\mapping_file.xlsx
+2025-07-11 17:27:58,185 - AuditReportLogger - INFO - main.run_audit_report:37 - 
+--- [步骤 1/3] 执行数据提取 ---
+2025-07-11 17:27:58,185 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:31 - --- 开始执行【新版】数据提取流程 (legacy_runner) ---
+2025-07-11 17:27:58,558 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:40 - 成功加载源文件和所有映射配置。
+2025-07-11 17:27:58,558 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2019资产负债表'...
+2025-07-11 17:27:58,584 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2019资产负债表' 中未找到项目 '流动资产' 或其任何别名。
+2025-07-11 17:27:58,585 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2019资产负债表' 中未找到项目 '非流动资产' 或其任何别名。
+2025-07-11 17:27:58,586 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2019资产负债表' 中未找到项目 '流动负债' 或其任何别名。
+2025-07-11 17:27:58,586 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2019资产负债表' 中未找到项目 '非流动负债' 或其任何别名。
+2025-07-11 17:27:58,587 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2019资产负债表' 中未找到项目 '净资产' 或其任何别名。
+2025-07-11 17:27:58,591 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:61 - 从 '2019资产负债表' 提取了 7 条资产负债表记录。
+2025-07-11 17:27:58,591 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2019业务活动表'...
+2025-07-11 17:27:58,593 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:74 - 从 '2019业务活动表' 提取了 14 条业务活动表记录。
+2025-07-11 17:27:58,593 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2020资产负债表'...
+2025-07-11 17:27:58,595 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2020资产负债表' 中未找到项目 '流动资产' 或其任何别名。
+2025-07-11 17:27:58,595 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2020资产负债表' 中未找到项目 '非流动资产' 或其任何别名。
+2025-07-11 17:27:58,596 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2020资产负债表' 中未找到项目 '流动负债' 或其任何别名。
+2025-07-11 17:27:58,597 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2020资产负债表' 中未找到项目 '非流动负债' 或其任何别名。
+2025-07-11 17:27:58,597 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2020资产负债表' 中未找到项目 '净资产' 或其任何别名。
+2025-07-11 17:27:58,600 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:61 - 从 '2020资产负债表' 提取了 7 条资产负债表记录。
+2025-07-11 17:27:58,600 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2020业务活动表'...
+2025-07-11 17:27:58,602 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:74 - 从 '2020业务活动表' 提取了 14 条业务活动表记录。
+2025-07-11 17:27:58,603 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2021资产负债表'...
+2025-07-11 17:27:58,604 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2021资产负债表' 中未找到项目 '流动资产' 或其任何别名。
+2025-07-11 17:27:58,605 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2021资产负债表' 中未找到项目 '非流动资产' 或其任何别名。
+2025-07-11 17:27:58,606 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2021资产负债表' 中未找到项目 '流动负债' 或其任何别名。
+2025-07-11 17:27:58,607 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2021资产负债表' 中未找到项目 '非流动负债' 或其任何别名。
+2025-07-11 17:27:58,608 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2021资产负债表' 中未找到项目 '净资产' 或其任何别名。
+2025-07-11 17:27:58,611 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:61 - 从 '2021资产负债表' 提取了 7 条资产负债表记录。
+2025-07-11 17:27:58,611 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2021业务活动表'...
+2025-07-11 17:27:58,613 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:74 - 从 '2021业务活动表' 提取了 14 条业务活动表记录。
+2025-07-11 17:27:58,614 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2022资产负债表'...
+2025-07-11 17:27:58,619 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2022资产负债表' 中未找到项目 '流动资产' 或其任何别名。
+2025-07-11 17:27:58,620 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2022资产负债表' 中未找到项目 '非流动资产' 或其任何别名。
+2025-07-11 17:27:58,621 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2022资产负债表' 中未找到项目 '流动负债' 或其任何别名。
+2025-07-11 17:27:58,623 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2022资产负债表' 中未找到项目 '非流动负债' 或其任何别名。
+2025-07-11 17:27:58,625 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2022资产负债表' 中未找到项目 '净资产' 或其任何别名。
+2025-07-11 17:27:58,628 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:61 - 从 '2022资产负债表' 提取了 7 条资产负债表记录。
+2025-07-11 17:27:58,629 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2022业务活动表'...
+2025-07-11 17:27:58,631 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:74 - 从 '2022业务活动表' 提取了 14 条业务活动表记录。
+2025-07-11 17:27:58,631 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2023资产负债表'...
+2025-07-11 17:27:58,633 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2023资产负债表' 中未找到项目 '流动资产' 或其任何别名。
+2025-07-11 17:27:58,634 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2023资产负债表' 中未找到项目 '非流动资产' 或其任何别名。
+2025-07-11 17:27:58,634 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2023资产负债表' 中未找到项目 '流动负债' 或其任何别名。
+2025-07-11 17:27:58,635 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2023资产负债表' 中未找到项目 '非流动负债' 或其任何别名。
+2025-07-11 17:27:58,636 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2023资产负债表' 中未找到项目 '净资产' 或其任何别名。
+2025-07-11 17:27:58,641 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:61 - 从 '2023资产负债表' 提取了 7 条资产负债表记录。
+2025-07-11 17:27:58,642 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2023业务活动表'...
+2025-07-11 17:27:58,645 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:74 - 从 '2023业务活动表' 提取了 14 条业务活动表记录。
+2025-07-11 17:27:58,645 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2024资产负债表'...
+2025-07-11 17:27:58,647 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2024资产负债表' 中未找到项目 '流动资产' 或其任何别名。
+2025-07-11 17:27:58,647 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2024资产负债表' 中未找到项目 '非流动资产' 或其任何别名。
+2025-07-11 17:27:58,648 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2024资产负债表' 中未找到项目 '流动负债' 或其任何别名。
+2025-07-11 17:27:58,649 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2024资产负债表' 中未找到项目 '非流动负债' 或其任何别名。
+2025-07-11 17:27:58,649 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2024资产负债表' 中未找到项目 '净资产' 或其任何别名。
+2025-07-11 17:27:58,652 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:61 - 从 '2024资产负债表' 提取了 7 条资产负债表记录。
+2025-07-11 17:27:58,652 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2024业务活动表'...
+2025-07-11 17:27:58,659 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:74 - 从 '2024业务活动表' 提取了 14 条业务活动表记录。
+2025-07-11 17:27:58,659 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2025资产负债表'...
+2025-07-11 17:27:58,661 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2025资产负债表' 中未找到项目 '流动资产' 或其任何别名。
+2025-07-11 17:27:58,662 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2025资产负债表' 中未找到项目 '非流动资产' 或其任何别名。
+2025-07-11 17:27:58,662 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2025资产负债表' 中未找到项目 '流动负债' 或其任何别名。
+2025-07-11 17:27:58,663 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2025资产负债表' 中未找到项目 '非流动负债' 或其任何别名。
+2025-07-11 17:27:58,664 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:66 - 在Sheet '2025资产负债表' 中未找到项目 '净资产' 或其任何别名。
+2025-07-11 17:27:58,666 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:61 - 从 '2025资产负债表' 提取了 7 条资产负债表记录。
+2025-07-11 17:27:58,667 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:48 - 正在处理Sheet: '2025业务活动表'...
+2025-07-11 17:27:58,669 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:74 - 从 '2025业务活动表' 提取了 14 条业务活动表记录。
+2025-07-11 17:27:58,670 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:83 - 数据提取完成，共收集到 147 条记录。正在转换为DataFrame...
+2025-07-11 17:27:58,675 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:95 - --- 数据提取流程结束，成功生成DataFrame。---
+2025-07-11 17:27:58,683 - AuditReportLogger - INFO - main.run_audit_report:44 - ✅ 数据提取成功！原始DataFrame已加载到内存。
+2025-07-11 17:27:58,684 - AuditReportLogger - INFO - main.run_audit_report:49 - 
+--- [步骤 2/3] 执行数据处理与计算 ---
+2025-07-11 17:27:58,684 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:20 - 开始进行数据透视和清理...
+2025-07-11 17:27:58,841 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:35 - 资产负债表数据透视完成。
+2025-07-11 17:27:58,844 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:45 - 业务活动表数据透视完成。
+2025-07-11 17:27:58,845 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:56 - 数据透视和清理完成。
+2025-07-11 17:27:58,845 - AuditReportLogger - INFO - main.run_audit_report:56 - ✅ 数据透视与清理成功！
+2025-07-11 17:27:58,846 - AuditReportLogger - INFO - data_processor.calculate_summary_values:72 - 开始计算最终汇总指标...
+2025-07-11 17:27:58,846 - AuditReportLogger - INFO - data_processor.calculate_summary_values:87 - 数据期间为: 2019 年至 2025 年。
+2025-07-11 17:27:58,846 - AuditReportLogger - INFO - data_processor.calculate_summary_values:109 - 资产、负债、净资产指标计算完成。
+2025-07-11 17:27:58,848 - AuditReportLogger - INFO - data_processor.calculate_summary_values:123 - 收入、费用、结余指标计算完成。
+2025-07-11 17:27:58,848 - AuditReportLogger - INFO - data_processor.calculate_summary_values:128 - 所有汇总指标计算完成。
+2025-07-11 17:27:58,848 - AuditReportLogger - INFO - main.run_audit_report:65 - ✅ 最终汇总指标计算成功！
+2025-07-11 17:27:58,849 - AuditReportLogger - INFO - main.run_audit_report:69 - 
+--- [步骤 3/3] 展示最终计算结果 ---
+2025-07-11 17:27:58,873 - AuditReportLogger - INFO - main.run_audit_report:76 - 
+========================================
+2025-07-11 17:27:58,874 - AuditReportLogger - INFO - main.run_audit_report:77 - ===         流程执行完毕           ===
+2025-07-11 17:27:58,874 - AuditReportLogger - INFO - main.run_audit_report:78 - ========================================
