@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+
+# 输出与日志文件
+*.doc
+*.docx
+*.xlsx
+*.pdf
+
+# 大型数据文件
+*.zip
+*.rar
+
+# 编辑器配置
+.vscode/
+.idea/
