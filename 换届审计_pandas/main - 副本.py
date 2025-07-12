@@ -6,7 +6,9 @@ from src.utils.logger_config import logger
 from src.legacy_runner import run_legacy_extraction
 from src.data_processor import pivot_and_clean_data, calculate_summary_values
 from src.data_validator import run_all_checks
-from modules.mapping_loader import load_mapping_file # 复核模块需要配置信息
+
+SRC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src')
+sys.path.append(SRC_PATH)
 
 def run_audit_report():
     logger.info("========================================")
@@ -20,43 +22,34 @@ def run_audit_report():
     logger.info(f"源文件路径: {source_file}")
     logger.info(f"映射文件路径: {mapping_file}")
 
-    # --- 步骤 1/4: 数据提取 ---
-    logger.info("\n--- [步骤 1/4] 执行数据提取 ---")
+    logger.info("\n--- [步骤 1/3] 执行数据提取 ---")
     raw_df = run_legacy_extraction(source_file, mapping_file)
+
     if raw_df is None or raw_df.empty:
+        logger.error("数据提取失败或未提取到任何数据，流程终止。")
         return
 
-    logger.info("✅ 数据提取成功！")
+    logger.info("✅ 数据提取成功！原始DataFrame已加载到内存。")
 
-    # --- 步骤 2/4: 数据处理与计算 ---
-    logger.info("\n--- [步骤 2/4] 执行数据处理与计算 ---")
+    logger.info("\n--- [步骤 2/3] 执行数据处理与计算 ---")
+    
     pivoted_normal_df, pivoted_total_df = pivot_and_clean_data(raw_df)
     if pivoted_total_df is None or pivoted_total_df.empty:
+        logger.error("数据透视后未能生成合计项目表，无法进行汇总计算，流程终止。")
         return
     logger.info("✅ 数据透视与清理成功！")
         
-    final_summary_dict = calculate_summary_values(pivoted_total_df, raw_df)
+    final_summary_dict = calculate_summary_values(pivoted_total_df,raw_df)
     if not final_summary_dict:
+        logger.error("最终汇总指标计算失败，流程终止。")
         return
+        
     logger.info("✅ 最终汇总指标计算成功！")
     
-    # --- 步骤 3/4: 执行数据复核 ---
-    logger.info("\n--- [步骤 3/4] 执行数据复核 ---")
-    # 我们需要加载mapping文件来为复核提供规则
-    full_mapping = load_mapping_file(mapping_file)
-    verification_results = run_all_checks(pivoted_normal_df, pivoted_total_df, raw_df, full_mapping)
-    logger.info("✅ 数据复核完成！")
-
-    # --- 步骤 4/4: 展示最终结果 ---
-    logger.info("\n--- [步骤 4/4] 展示最终计算结果与复核报告 ---")
+    logger.info("\n--- [步骤 3/3] 展示最终计算结果 ---")
     
     print("\n" + "="*25 + " 最终计算结果 " + "="*25)
     print(json.dumps(final_summary_dict, indent=4, ensure_ascii=False))
-    print("="*68)
-    
-    print("\n" + "="*27 + " 复核报告 " + "="*27)
-    for line in verification_results:
-        print(line)
     print("="*68)
     
     logger.info("\n========================================")
