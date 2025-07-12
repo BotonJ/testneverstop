@@ -1,61 +1,13 @@
 # /modules/mapping_loader.py
 import pandas as pd
 import openpyxl
-from openpyxl.utils.cell import coordinate_to_tuple, column_index_from_string
 from src.utils.logger_config import logger
-
-def get_col_index(cell):
-    """从'C'或'C5'中安全地提取列索引。忠于原始逻辑。"""
-    try:
-        if cell is None: return None
-        # 如果是单个字母，直接转换
-        if str(cell).isalpha():
-            return column_index_from_string(cell)
-        # 如果是单元格坐标，先提取字母再转换
-        return column_index_from_string(coordinate_to_tuple(str(cell))[1])
-    except Exception:
-        return None # 解析失败则返回None
-
-def parse_skip_rows(value):
-    """解析跳过行配置。忠于原始逻辑。"""
-    if not value: return []
-    rows = []
-    for item in str(value).split(","):
-        item = item.strip().replace("：", "")
-        if item.isdigit():
-            rows.append(int(item))
-    return rows
-    
-def load_full_mapping_as_df(mapping_path):
-    """
-    【旧版Pandas加载器 - 保留备用】
-    将映射文件中所有指定的Sheet作为Pandas DataFrame加载到一个字典中。
-    """
-    # ... 此函数内容保持不变，此处省略 ...
-    sheets_to_load = [
-        "HeaderMapping", "资产负债表区块", "业务活动表逐行", 
-        "科目等价映射", "业务活动表汇总注入配置"
-    ]
-    all_mappings = {}
-    try:
-        with pd.ExcelFile(mapping_path) as xls:
-            for sheet_name in sheets_to_load:
-                if sheet_name in xls.sheet_names:
-                    df = pd.read_excel(xls, sheet_name=sheet_name)
-                    for col in df.select_dtypes(include=['object']).columns:
-                        df[col] = df[col].str.strip()
-                    all_mappings[sheet_name] = df
-                else:
-                    all_mappings[sheet_name] = pd.DataFrame()
-        return all_mappings
-    except Exception as e:
-        logger.error(f"使用pandas加载完整的mapping_file.xlsx时出错: {e}")
-        return {name: pd.DataFrame() for name in sheets_to_load}
+from modules.utils import normalize_name
 
 def load_mapping_file(path):
     """
-    【最终版 - 忠于原始逻辑】
-    使用openpyxl精确解析mapping_file，返回与原始脚本完全一致的数据结构。
+    【最终版 V3 - 忠于原始逻辑】
+    精确解析mapping_file，并增加对业务活动表汇总配置的解析。
     """
     logger.info("--- 开始使用原始逻辑精确解析 mapping_file.xlsx ---")
     try:
@@ -64,45 +16,33 @@ def load_mapping_file(path):
         logger.error(f"映射文件未找到: {path}")
         return {}
 
-    # 1. 解析 "资产负债表区块"
-    blocks = {}
-    if "资产负债表区块" in wb.sheetnames:
-        ws = wb["资产负债表区块"]
-        # 使用pandas读取以简化空行和类型处理
-        df = pd.read_excel(path, sheet_name="资产负债表区块")
-        for _, row in df.iterrows():
-            block_name = row.get('区块名称')
-            if pd.isna(block_name): continue
-            blocks[str(block_name).strip()] = row.to_dict()
+    all_mappings = {}
 
-    # 2. 解析 "科目等价映射" (使用Pandas更健壮)
-    alias_map_df = pd.DataFrame()
-    if "科目等价映射" in wb.sheetnames:
-        alias_map_df = pd.read_excel(path, sheet_name="科目等价映射")
+    def _load_sheet_as_df(sheet_name):
+        if sheet_name in wb.sheetnames:
+            return pd.read_excel(path, sheet_name=sheet_name)
+        logger.warning(f"在mapping_file中未找到名为'{sheet_name}'的Sheet。")
+        return pd.DataFrame()
 
-    # 3. 解析 "业务活动表逐行"
-    yewu_map = []
-    if "业务活动表逐行" in wb.sheetnames:
-        ws = wb["业务活动表逐行"]
-        headers = [cell.value for cell in next(ws.iter_rows(min_row=1, max_row=1))]
-        for row in ws.iter_rows(min_row=2, values_only=True):
-            if all(cell is None or str(cell).strip() == "" for cell in row):
-                continue
-            yewu_map.append(dict(zip(headers, row)))
+    all_mappings["blocks_df"] = _load_sheet_as_df("资产负债表区块")
+    all_mappings["alias_map_df"] = _load_sheet_as_df("科目等价映射")
+    
+    df_yewu = _load_sheet_as_df("业务活动表逐行")
+    all_mappings["yewu_line_map"] = df_yewu.dropna(how='all').to_dict('records')
 
-    # 4. 解析 "HeaderMapping" (此部分在我们的新流程中暂时用不到，但保留解析逻辑)
-    header_meta = {}
-    if "HeaderMapping" in wb.sheetnames:
-        # ... (保留您原始的header_meta解析逻辑或简化)
-        pass
+    yewu_subtotal_config = {}
+    df_yewu_summary = _load_sheet_as_df("业务活动表汇总注入配置")
+    if not df_yewu_summary.empty:
+        if all(col in df_yewu_summary.columns for col in ['类型', '科目名称']):
+            # 对科目名称进行清洗
+            df_yewu_summary['科目名称'] = df_yewu_summary['科目名称'].apply(lambda x: normalize_name(x) if pd.notna(x) else "")
+            grouped = df_yewu_summary.groupby('类型')['科目名称'].apply(list)
+            yewu_subtotal_config = grouped.to_dict()
+            logger.info(f"成功解析'业务活动表汇总注入配置'，识别出类型: {list(yewu_subtotal_config.keys())}")
+        else:
+            logger.error("'业务活动表汇总注入配置'缺少'类型'或'科目名称'列，无法用于复核。")
+    all_mappings["yewu_subtotal_config"] = yewu_subtotal_config
     
     logger.info("--- mapping_file.xlsx 解析完成 ---")
     
-    # 5. 返回与新流程兼容的数据结构
-    # 我们将原始的、更精确的解析结果传递给新模块使用
-    return {
-        "blocks_df": pd.DataFrame.from_dict(blocks, orient='index'),
-        "alias_map_df": alias_map_df,
-        "yewu_line_map": yewu_map,
-        "header_meta": header_meta # 保留
-    }
+    return all_mappings

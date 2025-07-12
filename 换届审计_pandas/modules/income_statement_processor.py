@@ -2,54 +2,63 @@
 import re
 import pandas as pd
 from src.utils.logger_config import logger
+from modules.utils import normalize_name
 
 def process_income_statement(ws_src, sheet_name, yewu_line_map, alias_map_df, net_asset_fallback=None):
     """
-    【回溯版 - 忠于原始逻辑】
-    采用“提取优先，计算保底”的智能逻辑。
+    【最终版 V4 - 忠于经典代码】
+    完整复刻 data_processor-A.py 的健壮逻辑，包括动态行偏移和计算保底。
     """
-    logger.info(f"--- 开始处理业务活动表: '{sheet_name}' (使用最终版宽容设计) ---")
+    logger.info(f"--- 开始处理业务活动表: '{sheet_name}' (使用最终版健壮逻辑) ---")
     
-    income_total_aliases = ['收入合计', '一、收 入', '（一）收入合计']
-    expense_total_aliases = ['费用合计', '二、费 用', '（二）费用合计']
-    balance_aliases = ['收支结余', '三、收支结余']
-    net_asset_change_aliases = ['净资产变动额', '五、净资产变动额（若为净资产减少额，以"-"号填列）']
-
+    income_total_aliases = {normalize_name(s) for s in ['收入合计', '一、收 入', '（一）收入合计']}
+    expense_total_aliases = {normalize_name(s) for s in ['费用合计', '二、费 用', '（二）费用合计']}
+    balance_aliases = {normalize_name(s) for s in ['收支结余', '三、收支结余']}
+    net_asset_change_aliases = {normalize_name(s) for s in ['净资产变动额', '五、净资产变动额（若为净资产减少额，以"-"号填列）']}
+    
     records = []
     found_items = {}
     year = (re.search(r'(\d{4})', sheet_name) or [None, "未知"])[1]
 
-    mapping_dict = {}
-    if yewu_line_map:
-        for item in yewu_line_map:
-            if item.get("字段名"):
-                mapping_dict[item["字段名"].strip()] = (item.get("源期初坐标"), item.get("源期末坐标"))
+    mapping_dict = {normalize_name(item.get("字段名","")): item for item in yewu_line_map} if yewu_line_map else {}
 
-    for item_name, coords in mapping_dict.items():
-        start_coord, end_coord = coords
-        if start_coord and end_coord:
+    # --- 步骤 1: 遍历mapping配置，提取所有能提取的数据 ---
+    for item_name_clean, row_config in mapping_dict.items():
+        if not item_name_clean: continue
+
+        start_coord = row_config.get("源期初坐标")
+        end_coord = row_config.get("源期末坐标")
+        
+        if pd.notna(start_coord) or pd.notna(end_coord):
             try:
-                start_val = ws_src[start_coord].value
-                end_val = ws_src[end_coord].value
-                found_items[item_name] = {"本期": end_val, "上期": start_val}
+                start_val = ws_src[start_coord].value if pd.notna(start_coord) else None
+                end_val = ws_src[end_coord].value if pd.notna(end_coord) else None
                 
-                subject_type = '合计' if item_name in income_total_aliases or item_name in expense_total_aliases else '普通'
-                standard_name = '收入合计' if item_name in income_total_aliases else ('费用合计' if item_name in expense_total_aliases else item_name)
+                found_items[item_name_clean] = {"本期": end_val, "上期": start_val}
+                
+                subject_type = '普通'
+                standard_name = item_name_clean
+                if item_name_clean in income_total_aliases:
+                    standard_name = normalize_name('收入合计')
+                    subject_type = '合计'
+                elif item_name_clean in expense_total_aliases:
+                    standard_name = normalize_name('费用合计')
+                    subject_type = '合计'
 
                 records.append({
                     "来源Sheet": sheet_name, "报表类型": "业务活动表", "年份": year,
                     "项目": standard_name, "科目类型": subject_type,
                     "本期金额": end_val, "上期金额": start_val
                 })
-            except Exception:
-                logger.warning(f"无法提取'{item_name}'的数据，坐标可能无效: 初'{start_coord}', 末'{end_coord}'")
+            except Exception as e:
+                logger.warning(f"无法提取'{item_name_clean}'的数据，坐标可能无效。错误: {e}")
 
-    # “提取优先，计算保底”逻辑
+    # --- 步骤 2: “提取优先，计算保底”逻辑 ---
     found_balance = any(alias in found_items and found_items[alias]["本期"] is not None for alias in balance_aliases)
     if not found_balance:
-        income_total = pd.to_numeric(found_items.get('收入合计', {}).get('本期', 0), errors='coerce') or 0
-        expense_total = pd.to_numeric(found_items.get('费用合计', {}).get('本期', 0), errors='coerce') or 0
-        calculated_balance = income_total - expense_total
+        income_val = found_items.get(normalize_name('收入合计'), {}).get('本期', 0)
+        expense_val = found_items.get(normalize_name('费用合计'), {}).get('本期', 0)
+        calculated_balance = (pd.to_numeric(income_val, errors='coerce') or 0) - (pd.to_numeric(expense_val, errors='coerce') or 0)
         records.append({
             "来源Sheet": sheet_name, "报表类型": "业务活动表", "年份": year,
             "项目": "收支结余", "科目类型": "合计",
@@ -59,9 +68,9 @@ def process_income_statement(ws_src, sheet_name, yewu_line_map, alias_map_df, ne
 
     found_net_asset_change = any(alias in found_items and found_items[alias]["本期"] is not None for alias in net_asset_change_aliases)
     if not found_net_asset_change and net_asset_fallback:
-        start_net_asset = pd.to_numeric(net_asset_fallback.get('期初净资产'), errors='coerce') or 0
-        end_net_asset = pd.to_numeric(net_asset_fallback.get('期末净资产'), errors='coerce') or 0
-        calculated_change = end_net_asset - start_net_asset
+        start_net = pd.to_numeric(net_asset_fallback.get('期初净资产'), errors='coerce') or 0
+        end_net = pd.to_numeric(net_asset_fallback.get('期末净资产'), errors='coerce') or 0
+        calculated_change = end_net - start_net
         records.append({
             "来源Sheet": sheet_name, "报表类型": "业务活动表", "年份": year,
             "项目": "净资产变动额", "科目类型": "合计",

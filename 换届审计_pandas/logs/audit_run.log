@@ -1,77 +1,80 @@
-2025-07-12 15:29:06,661 - AuditReportLogger - INFO - main.run_audit_report:12 - ========================================
-2025-07-12 15:29:06,661 - AuditReportLogger - INFO - main.run_audit_report:13 - ===    自动化审计报告生成流程启动    ===
-2025-07-12 15:29:06,661 - AuditReportLogger - INFO - main.run_audit_report:14 - ========================================
-2025-07-12 15:29:06,661 - AuditReportLogger - INFO - main.run_audit_report:20 - 源文件路径: C:\审计自动化\my_github_repos\换届审计_pandas\data\soce.xlsx
-2025-07-12 15:29:06,662 - AuditReportLogger - INFO - main.run_audit_report:21 - 映射文件路径: C:\审计自动化\my_github_repos\换届审计_pandas\data\mapping_file.xlsx
-2025-07-12 15:29:06,662 - AuditReportLogger - INFO - main.run_audit_report:24 - 
+2025-07-13 00:18:53,774 - AuditReportLogger - INFO - main.run_audit_report:16 - ========================================
+2025-07-13 00:18:53,774 - AuditReportLogger - INFO - main.run_audit_report:17 - ===    自动化审计报告生成流程启动    ===
+2025-07-13 00:18:53,774 - AuditReportLogger - INFO - main.run_audit_report:18 - ========================================
+2025-07-13 00:18:53,774 - AuditReportLogger - INFO - main.run_audit_report:24 - 源文件路径: C:\审计自动化\my_github_repos\换届审计_pandas\data\soce.xlsx
+2025-07-13 00:18:53,775 - AuditReportLogger - INFO - main.run_audit_report:25 - 映射文件路径: C:\审计自动化\my_github_repos\换届审计_pandas\data\mapping_file.xlsx
+2025-07-13 00:18:53,775 - AuditReportLogger - INFO - main.run_audit_report:28 - 
 --- [步骤 1/4] 执行数据提取 ---
-2025-07-12 15:29:06,662 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:21 - --- 开始执行【最终修复版 V4】数据提取流程 ---
-2025-07-12 15:29:06,662 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:60 - --- 开始使用原始逻辑精确解析 mapping_file.xlsx ---
-2025-07-12 15:29:06,737 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:99 - --- mapping_file.xlsx 解析完成 ---
-2025-07-12 15:29:06,807 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:42 - --- [Pass 1/2] 正在处理所有资产负债表... ---
-2025-07-12 15:29:06,808 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:11 - --- 开始处理资产负债表: '2019资产负债表' (使用'全局扫描'逻辑) ---
-2025-07-12 15:29:06,809 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:49 - --- 资产负债表 '2019资产负债表' 处理完成，生成 54 条记录。---
-2025-07-12 15:29:06,811 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:11 - --- 开始处理资产负债表: '2020资产负债表' (使用'全局扫描'逻辑) ---
-2025-07-12 15:29:06,812 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:49 - --- 资产负债表 '2020资产负债表' 处理完成，生成 54 条记录。---
-2025-07-12 15:29:06,813 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:11 - --- 开始处理资产负债表: '2021资产负债表' (使用'全局扫描'逻辑) ---
-2025-07-12 15:29:06,815 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:49 - --- 资产负债表 '2021资产负债表' 处理完成，生成 54 条记录。---
-2025-07-12 15:29:06,816 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:11 - --- 开始处理资产负债表: '2022资产负债表' (使用'全局扫描'逻辑) ---
-2025-07-12 15:29:06,817 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:49 - --- 资产负债表 '2022资产负债表' 处理完成，生成 54 条记录。---
-2025-07-12 15:29:06,819 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:11 - --- 开始处理资产负债表: '2023资产负债表' (使用'全局扫描'逻辑) ---
-2025-07-12 15:29:06,820 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:49 - --- 资产负债表 '2023资产负债表' 处理完成，生成 54 条记录。---
-2025-07-12 15:29:06,821 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:11 - --- 开始处理资产负债表: '2024资产负债表' (使用'全局扫描'逻辑) ---
-2025-07-12 15:29:06,822 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:49 - --- 资产负债表 '2024资产负债表' 处理完成，生成 54 条记录。---
-2025-07-12 15:29:06,824 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:11 - --- 开始处理资产负债表: '2025资产负债表' (使用'全局扫描'逻辑) ---
-2025-07-12 15:29:06,826 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:49 - --- 资产负债表 '2025资产负债表' 处理完成，生成 54 条记录。---
-2025-07-12 15:29:06,827 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:68 - --- [Pass 2/2] 正在处理所有业务活动表... ---
-2025-07-12 15:29:06,828 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:11 - --- 开始处理业务活动表: '2019业务活动表' (使用最终版宽容设计) ---
-2025-07-12 15:29:06,828 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:70 - 自动计算'净资产变动额'完成，值为: -242749.75
-2025-07-12 15:29:06,828 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:72 - --- 业务活动表 '2019业务活动表' 处理完成，最终生成 16 条记录。---
-2025-07-12 15:29:06,829 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:11 - --- 开始处理业务活动表: '2020业务活动表' (使用最终版宽容设计) ---
-2025-07-12 15:29:06,829 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:70 - 自动计算'净资产变动额'完成，值为: 188584.4800000002
-2025-07-12 15:29:06,829 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:72 - --- 业务活动表 '2020业务活动表' 处理完成，最终生成 16 条记录。---
-2025-07-12 15:29:06,829 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:11 - --- 开始处理业务活动表: '2021业务活动表' (使用最终版宽容设计) ---
-2025-07-12 15:29:06,830 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:70 - 自动计算'净资产变动额'完成，值为: -190852.41000000015
-2025-07-12 15:29:06,830 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:72 - --- 业务活动表 '2021业务活动表' 处理完成，最终生成 16 条记录。---
-2025-07-12 15:29:06,830 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:11 - --- 开始处理业务活动表: '2022业务活动表' (使用最终版宽容设计) ---
-2025-07-12 15:29:06,830 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:70 - 自动计算'净资产变动额'完成，值为: 49802.64000000013
-2025-07-12 15:29:06,831 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:72 - --- 业务活动表 '2022业务活动表' 处理完成，最终生成 16 条记录。---
-2025-07-12 15:29:06,831 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:11 - --- 开始处理业务活动表: '2023业务活动表' (使用最终版宽容设计) ---
-2025-07-12 15:29:06,831 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:70 - 自动计算'净资产变动额'完成，值为: 385726.20999999996
-2025-07-12 15:29:06,832 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:72 - --- 业务活动表 '2023业务活动表' 处理完成，最终生成 16 条记录。---
-2025-07-12 15:29:06,832 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:11 - --- 开始处理业务活动表: '2024业务活动表' (使用最终版宽容设计) ---
-2025-07-12 15:29:06,832 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:70 - 自动计算'净资产变动额'完成，值为: -99720.63000000012
-2025-07-12 15:29:06,832 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:72 - --- 业务活动表 '2024业务活动表' 处理完成，最终生成 16 条记录。---
-2025-07-12 15:29:06,832 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:11 - --- 开始处理业务活动表: '2025业务活动表' (使用最终版宽容设计) ---
-2025-07-12 15:29:06,833 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:70 - 自动计算'净资产变动额'完成，值为: -207671.1399999999
-2025-07-12 15:29:06,833 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:72 - --- 业务活动表 '2025业务活动表' 处理完成，最终生成 16 条记录。---
-2025-07-12 15:29:06,836 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:98 - --- 数据提取流程结束，成功生成包含 490 条记录的DataFrame。---
-2025-07-12 15:29:06,836 - AuditReportLogger - INFO - main.run_audit_report:29 - ✅ 数据提取成功！
-2025-07-12 15:29:06,836 - AuditReportLogger - INFO - main.run_audit_report:32 - 
+2025-07-13 00:18:53,775 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:21 - --- 开始执行【最终修复版 V4】数据提取流程 ---
+2025-07-13 00:18:53,775 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:12 - --- 开始使用原始逻辑精确解析 mapping_file.xlsx ---
+2025-07-13 00:18:53,898 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:41 - 成功解析'业务活动表汇总注入配置'，识别出类型: ['收入', '费用']
+2025-07-13 00:18:53,899 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:46 - --- mapping_file.xlsx 解析完成 ---
+2025-07-13 00:18:53,963 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:42 - --- [Pass 1/2] 正在处理所有资产负债表... ---
+2025-07-13 00:18:53,964 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:12 - --- 开始处理资产负债表: '2025年资产负债表' (使用带清洗的'全局扫描'逻辑) ---
+2025-07-13 00:18:53,967 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:55 - --- 资产负债表 '2025年资产负债表' 处理完成，生成 55 条记录。---
+2025-07-13 00:18:53,968 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:12 - --- 开始处理资产负债表: '2024年资产负债表' (使用带清洗的'全局扫描'逻辑) ---
+2025-07-13 00:18:53,970 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:55 - --- 资产负债表 '2024年资产负债表' 处理完成，生成 55 条记录。---
+2025-07-13 00:18:53,972 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:12 - --- 开始处理资产负债表: '2023年资产负债表' (使用带清洗的'全局扫描'逻辑) ---
+2025-07-13 00:18:53,974 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:55 - --- 资产负债表 '2023年资产负债表' 处理完成，生成 55 条记录。---
+2025-07-13 00:18:53,976 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:12 - --- 开始处理资产负债表: '2022年资产负债表' (使用带清洗的'全局扫描'逻辑) ---
+2025-07-13 00:18:53,979 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:55 - --- 资产负债表 '2022年资产负债表' 处理完成，生成 55 条记录。---
+2025-07-13 00:18:53,980 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:12 - --- 开始处理资产负债表: '2021年资产负债表' (使用带清洗的'全局扫描'逻辑) ---
+2025-07-13 00:18:53,982 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:55 - --- 资产负债表 '2021年资产负债表' 处理完成，生成 55 条记录。---
+2025-07-13 00:18:53,983 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:12 - --- 开始处理资产负债表: '2020z' (使用带清洗的'全局扫描'逻辑) ---
+2025-07-13 00:18:53,985 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:55 - --- 资产负债表 '2020z' 处理完成，生成 55 条记录。---
+2025-07-13 00:18:53,987 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:12 - --- 开始处理资产负债表: '2019Z' (使用带清洗的'全局扫描'逻辑) ---
+2025-07-13 00:18:53,989 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:55 - --- 资产负债表 '2019Z' 处理完成，生成 55 条记录。---
+2025-07-13 00:18:53,991 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:68 - --- [Pass 2/2] 正在处理所有业务活动表... ---
+2025-07-13 00:18:53,991 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2025年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-13 00:18:53,992 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: -207671.1399999999
+2025-07-13 00:18:53,992 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2025年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-13 00:18:53,992 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2024年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-13 00:18:53,993 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: -99720.63000000012
+2025-07-13 00:18:53,993 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2024年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-13 00:18:53,993 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2023年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-13 00:18:53,994 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: 385726.20999999996
+2025-07-13 00:18:53,994 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2023年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-13 00:18:53,994 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2022年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-13 00:18:53,994 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: 49802.64000000013
+2025-07-13 00:18:53,995 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2022年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-13 00:18:53,995 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2021年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-13 00:18:53,995 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: -190852.41000000015
+2025-07-13 00:18:53,995 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2021年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-13 00:18:53,995 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2020Y' (使用最终版健壮逻辑) ---
+2025-07-13 00:18:53,996 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: 188584.4800000002
+2025-07-13 00:18:53,996 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2020Y' 处理完成，最终生成 16 条记录。---
+2025-07-13 00:18:53,996 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2019y' (使用最终版健壮逻辑) ---
+2025-07-13 00:18:53,997 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: -242749.75
+2025-07-13 00:18:53,997 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2019y' 处理完成，最终生成 16 条记录。---
+2025-07-13 00:18:53,999 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:98 - --- 数据提取流程结束，成功生成包含 497 条记录的DataFrame。---
+2025-07-13 00:18:53,999 - AuditReportLogger - INFO - main.run_audit_report:31 - ✅ 数据提取成功！
+2025-07-13 00:18:54,000 - AuditReportLogger - INFO - main.run_audit_report:34 - 
 --- [步骤 2/4] 执行数据处理与计算 ---
-2025-07-12 15:29:06,836 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:8 - 开始进行数据透视和清理...
-2025-07-12 15:29:06,847 - AuditReportLogger - INFO - data_processor._pivot:25 - 普通科目数据透视完成。
-2025-07-12 15:29:06,855 - AuditReportLogger - INFO - data_processor._pivot:25 - 合计科目数据透视完成。
-2025-07-12 15:29:06,855 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:29 - 数据透视和清理完成。
-2025-07-12 15:29:06,856 - AuditReportLogger - INFO - main.run_audit_report:36 - ✅ 数据透视与清理成功！
-2025-07-12 15:29:06,856 - AuditReportLogger - INFO - data_processor.calculate_summary_values:38 - 开始计算最终汇总指标...
-2025-07-12 15:29:06,856 - AuditReportLogger - INFO - data_processor.calculate_summary_values:56 - 数据期间为: 2019 年至 2025 年。
-2025-07-12 15:29:06,859 - AuditReportLogger - INFO - data_processor.calculate_summary_values:98 - 资产、负债、净资产指标计算完成。
-2025-07-12 15:29:06,861 - AuditReportLogger - INFO - data_processor.calculate_summary_values:103 - 收入、费用、结余指标计算完成。
-2025-07-12 15:29:06,861 - AuditReportLogger - INFO - data_processor.calculate_summary_values:105 - 所有汇总指标计算完成。
-2025-07-12 15:29:06,861 - AuditReportLogger - INFO - main.run_audit_report:41 - ✅ 最终汇总指标计算成功！
-2025-07-12 15:29:06,861 - AuditReportLogger - INFO - main.run_audit_report:44 - 
+2025-07-13 00:18:54,000 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:8 - 开始进行数据透视和清理...
+2025-07-13 00:18:54,011 - AuditReportLogger - INFO - data_processor._pivot:25 - 普通科目数据透视完成。
+2025-07-13 00:18:54,017 - AuditReportLogger - INFO - data_processor._pivot:25 - 合计科目数据透视完成。
+2025-07-13 00:18:54,018 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:29 - 数据透视和清理完成。
+2025-07-13 00:18:54,018 - AuditReportLogger - INFO - main.run_audit_report:37 - ✅ 数据透视与清理成功！
+2025-07-13 00:18:54,018 - AuditReportLogger - INFO - data_processor.calculate_summary_values:38 - 开始计算最终汇总指标...
+2025-07-13 00:18:54,019 - AuditReportLogger - INFO - data_processor.calculate_summary_values:56 - 数据期间为: 2019 年至 2025 年。
+2025-07-13 00:18:54,021 - AuditReportLogger - INFO - data_processor.calculate_summary_values:98 - 资产、负债、净资产指标计算完成。
+2025-07-13 00:18:54,022 - AuditReportLogger - INFO - data_processor.calculate_summary_values:103 - 收入、费用、结余指标计算完成。
+2025-07-13 00:18:54,023 - AuditReportLogger - INFO - data_processor.calculate_summary_values:105 - 所有汇总指标计算完成。
+2025-07-13 00:18:54,023 - AuditReportLogger - INFO - main.run_audit_report:41 - ✅ 最终汇总指标计算成功！
+2025-07-13 00:18:54,023 - AuditReportLogger - INFO - main.run_audit_report:44 - 
 --- [步骤 3/4] 执行数据复核 ---
-2025-07-12 15:29:06,861 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:60 - --- 开始使用原始逻辑精确解析 mapping_file.xlsx ---
-2025-07-12 15:29:06,935 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:99 - --- mapping_file.xlsx 解析完成 ---
-2025-07-12 15:29:06,935 - AuditReportLogger - INFO - data_validator.run_all_checks:6 - --- [复核机制] 开始执行所有数据检查... ---
-2025-07-12 15:29:06,936 - AuditReportLogger - INFO - data_validator.run_all_checks:19 -   -> 正在执行: 业务活动表内部分项核对...
-2025-07-12 15:29:06,936 - AuditReportLogger - INFO - data_validator.run_all_checks:31 -   -> 正在执行: 核心勾稽关系检查...
-2025-07-12 15:29:06,937 - AuditReportLogger - INFO - data_validator.run_all_checks:34 - --- [复核机制] 所有数据检查执行完毕。 ---
-2025-07-12 15:29:06,937 - AuditReportLogger - INFO - main.run_audit_report:48 - ✅ 数据复核完成！
-2025-07-12 15:29:06,938 - AuditReportLogger - INFO - main.run_audit_report:51 - 
+2025-07-13 00:18:54,023 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:12 - --- 开始使用原始逻辑精确解析 mapping_file.xlsx ---
+2025-07-13 00:18:54,136 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:41 - 成功解析'业务活动表汇总注入配置'，识别出类型: ['收入', '费用']
+2025-07-13 00:18:54,137 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:46 - --- mapping_file.xlsx 解析完成 ---
+2025-07-13 00:18:54,137 - AuditReportLogger - INFO - data_validator.run_all_checks:8 - --- [复核机制] 开始执行所有数据检查... ---
+2025-07-13 00:18:54,138 - AuditReportLogger - INFO - data_validator.run_all_checks:21 -   -> 正在执行: 业务活动表内部分项核对...
+2025-07-13 00:18:54,140 - AuditReportLogger - INFO - data_validator.run_all_checks:36 -   -> 正在执行: 资产负债表内部分项核对...
+2025-07-13 00:18:54,141 - AuditReportLogger - INFO - data_validator.run_all_checks:45 -   -> 正在执行: 核心勾稽关系检查...
+2025-07-13 00:18:54,144 - AuditReportLogger - INFO - data_validator.run_all_checks:48 - --- [复核机制] 所有数据检查执行完毕。 ---
+2025-07-13 00:18:54,144 - AuditReportLogger - INFO - main.run_audit_report:47 - ✅ 数据复核完成！
+2025-07-13 00:18:54,144 - AuditReportLogger - INFO - main.run_audit_report:50 - 
 --- [步骤 4/4] 展示最终计算结果与复核报告 ---
-2025-07-12 15:29:06,940 - AuditReportLogger - INFO - main.run_audit_report:62 - 
+2025-07-13 00:18:54,147 - AuditReportLogger - INFO - main.run_audit_report:61 - 
 ========================================
-2025-07-12 15:29:06,940 - AuditReportLogger - INFO - main.run_audit_report:63 - ===         流程执行完毕           ===
-2025-07-12 15:29:06,940 - AuditReportLogger - INFO - main.run_audit_report:64 - ========================================
+2025-07-13 00:18:54,147 - AuditReportLogger - INFO - main.run_audit_report:62 - ===         流程执行完毕           ===
+2025-07-13 00:18:54,147 - AuditReportLogger - INFO - main.run_audit_report:63 - ========================================

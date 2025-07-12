@@ -6,7 +6,11 @@ from src.utils.logger_config import logger
 from src.legacy_runner import run_legacy_extraction
 from src.data_processor import pivot_and_clean_data, calculate_summary_values
 from src.data_validator import run_all_checks
-from modules.mapping_loader import load_mapping_file # 复核模块需要配置信息
+from modules.mapping_loader import load_mapping_file
+
+SRC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src')
+if SRC_PATH not in sys.path:
+    sys.path.append(SRC_PATH)
 
 def run_audit_report():
     logger.info("========================================")
@@ -23,26 +27,21 @@ def run_audit_report():
     # --- 步骤 1/4: 数据提取 ---
     logger.info("\n--- [步骤 1/4] 执行数据提取 ---")
     raw_df = run_legacy_extraction(source_file, mapping_file)
-    if raw_df is None or raw_df.empty:
-        return
-
+    if raw_df is None or raw_df.empty: return
     logger.info("✅ 数据提取成功！")
 
     # --- 步骤 2/4: 数据处理与计算 ---
     logger.info("\n--- [步骤 2/4] 执行数据处理与计算 ---")
     pivoted_normal_df, pivoted_total_df = pivot_and_clean_data(raw_df)
-    if pivoted_total_df is None or pivoted_total_df.empty:
-        return
+    if pivoted_total_df is None or pivoted_total_df.empty: return
     logger.info("✅ 数据透视与清理成功！")
         
     final_summary_dict = calculate_summary_values(pivoted_total_df, raw_df)
-    if not final_summary_dict:
-        return
+    if not final_summary_dict: return
     logger.info("✅ 最终汇总指标计算成功！")
     
     # --- 步骤 3/4: 执行数据复核 ---
     logger.info("\n--- [步骤 3/4] 执行数据复核 ---")
-    # 我们需要加载mapping文件来为复核提供规则
     full_mapping = load_mapping_file(mapping_file)
     verification_results = run_all_checks(pivoted_normal_df, pivoted_total_df, raw_df, full_mapping)
     logger.info("✅ 数据复核完成！")
