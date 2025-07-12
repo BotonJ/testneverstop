@@ -1,68 +1,75 @@
 # /modules/balance_sheet_processor.py
-
 import re
 import pandas as pd
-# 统一使用新的日志记录器
 from src.utils.logger_config import logger
-
-def _find_subject_row(ws_src, standard_name, aliases, search_cols=['A', 'E']):
-    """辅助函数：在源Sheet的指定列中查找科目所在的行。"""
-    all_names_to_find = [standard_name] + aliases
-    for row in ws_src.iter_rows(min_row=1, max_row=ws_src.max_row):
-        for col_letter in search_cols:
-            cell = ws_src[f"{col_letter}{row[0].row}"]
-            if cell.value and str(cell.value).strip() in all_names_to_find:
-                return cell.row
-    return None
 
 def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
     """
-    【新版】处理单个资产负债表Sheet，提取数据并返回字典列表。
+    【最终版 - 忠于原始逻辑】
+    模拟 fill_balance_anchor.py 的“全局扫描，字典匹配”算法。
     """
-    if blocks_df is None or blocks_df.empty:
-        logger.warning(f"跳过Sheet '{sheet_name}' 的处理，因为'资产负债表区块'配置为空。")
-        return []
+    logger.info(f"--- 开始处理资产负债表: '{sheet_name}' (使用原始'全局扫描'逻辑) ---")
 
-    year_match = re.search(r'(\d{4})', sheet_name)
-    year = year_match.group(1) if year_match else "未知年份"
-
-    records = []
-    
-    alias_to_standard = {}
+    # --- 1. 构建别名->标准名查找字典 ---
+    alias_lookup = {}
     if alias_map_df is not None and not alias_map_df.empty:
         for _, row in alias_map_df.iterrows():
             standard = str(row['标准科目名']).strip()
+            # 将所有别名都指向标准名
             for col in alias_map_df.columns:
                 if '等价科目名' in col and pd.notna(row[col]):
                     aliases = [alias.strip() for alias in str(row[col]).split(',')]
                     for alias in aliases:
-                        if alias: alias_to_standard[alias] = standard
+                        if alias:
+                            alias_lookup[alias] = standard
 
-    for _, block_row in blocks_df.iterrows():
-        standard_name = block_row['区块名称']
-        
-        # --- vvvvvvvv 核心BUG修复 vvvvvvvv ---
-        # 如果'区块名称'这一列是空的 (Pandas读取空单元格为NaN), 就跳过这一整行
-        if pd.isna(standard_name):
-            continue
-        # --- ^^^^^^^^ 核心BUG修复 ^^^^^^^^ ---
-        
-        start_col = block_row['源期初列'] # 现在这一行安全了
-        end_col = block_row['源期末列']
-
-        aliases = [alias for alias, std in alias_to_standard.items() if std == standard_name]
-        
-        found_row = _find_subject_row(ws_src, standard_name, aliases, search_cols=['A', 'E'])
-
-        if found_row:
-            start_val = ws_src[f"{start_col}{found_row}"].value
-            end_val = ws_src[f"{end_col}{found_row}"].value
-            record = {
-                "来源Sheet": sheet_name, "报表类型": "资产负债表", "年份": year,
-                "项目": standard_name, "期初金额": start_val, "期末金额": end_val
+    # --- 2. 全局扫描源Sheet，构建数据“电话本” (src_dict) ---
+    src_dict = {}
+    for i in range(1, ws_src.max_row + 1):
+        # 处理A-D列 (资产)
+        name_a = ws_src[f"A{i}"].value
+        if name_a and str(name_a).strip():
+            # 先用别名字典翻译，如果找不到，就用原始名称
+            name_std = alias_lookup.get(str(name_a).strip(), str(name_a).strip())
+            src_dict[name_std] = {
+                "期初": ws_src[f"C{i}"].value,
+                "期末": ws_src[f"D{i}"].value
             }
-            records.append(record)
-        else:
-            logger.warning(f"在Sheet '{sheet_name}' 中未找到项目 '{standard_name}' 或其任何别名。")
 
+        # 处理E-H列 (负债及权益)
+        name_e = ws_src[f"E{i}"].value
+        if name_e and str(name_e).strip():
+            name_std = alias_lookup.get(str(name_e).strip(), str(name_e).strip())
+            # 只有当该科目未在资产部分出现时才添加，避免重复
+            if name_std not in src_dict:
+                 src_dict[name_std] = {
+                    "期初": ws_src[f"G{i}"].value,
+                    "期末": ws_src[f"H{i}"].value
+                }
+
+    logger.debug(f"源Sheet '{sheet_name}' 扫描完成，构建了包含 {len(src_dict)} 个科目的数据字典。")
+    
+    # --- 3. 将构建好的数据字典转换为标准记录格式 ---
+    records = []
+    year = (re.search(r'(\d{4})', sheet_name) or [None, "未知"])[1]
+
+    for subject_name, values in src_dict.items():
+        # 判断科目类型 (基于我们之前的约定)
+        # 注意: 这里的alias_map_df需要重新利用，或在之前步骤构建更复杂结构
+        # 为简化，我们暂时只区分我们最关心的几个合计项
+        total_subjects = ['资产总计', '负债合计', '净资产合计', '流动资产合计', '非流动资产合计', '流动负债合计', '非流动负债合计']
+        subject_type = '合计' if subject_name in total_subjects else '普通'
+
+        record = {
+            "来源Sheet": sheet_name,
+            "报表类型": "资产负债表",
+            "年份": year,
+            "项目": subject_name,
+            "科目类型": subject_type,
+            "期初金额": values["期初"],
+            "期末金额": values["期末"]
+        }
+        records.append(record)
+        
+    logger.info(f"--- 资产负债表 '{sheet_name}' 处理完成，生成 {len(records)} 条记录。---")
     return records
