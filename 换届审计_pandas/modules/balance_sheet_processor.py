@@ -2,55 +2,88 @@
 import re
 import pandas as pd
 from src.utils.logger_config import logger
-from modules.utils import normalize_name # <-- 导入我们新的净化函数
+from modules.utils import normalize_name
+
+def _get_row_and_col_from_address(address):
+    """从单元格地址（如'A13'）中提取行号和列字母。"""
+    if not address or not isinstance(address, str):
+        return None, None
+    match = re.match(r"([A-Z]+)(\d+)", str(address).strip())
+    if match:
+        col, row = match.groups()
+        return int(row), col
+    return None, None
 
 def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
     """
-    【最终版 V2 - 忠于经典逻辑】
-    增加了 normalize_name 清洗，确保匹配的健壮性。
+    【最终版 V3 - 智能推断】
+    1. 不再需要'科目搜索列'，改为从'起始单元格'动态推断。
+    2. 严格按照“区块”处理，为每条数据打上正确的“所属区块”标签。
     """
-    logger.info(f"--- 开始处理资产负债表: '{sheet_name}' (使用带清洗的'全局扫描'逻辑) ---")
+    logger.info(f"--- 开始处理资产负债表: '{sheet_name}' (使用最终版'智能推断'逻辑) ---")
+    if blocks_df is None or blocks_df.empty: 
+        logger.warning(f"'{sheet_name}': '资产负债表区块'配置为空，跳过处理。")
+        return []
 
+    # --- 准备工作: 构建一个包含所有科目（含类型）的查找字典 ---
     alias_lookup = {}
     if alias_map_df is not None and not alias_map_df.empty:
         for _, row in alias_map_df.iterrows():
-            standard = normalize_name(row['标准科目名']) # 清洗标准名
+            standard_clean = normalize_name(row['标准科目名'])
+            if not standard_clean: continue
+            
+            subj_type = '合计' if '科目类型' in row and str(row['科目类型']).strip() == '合计' else '普通'
+            alias_lookup[standard_clean] = (standard_clean, subj_type)
+            
             for col in alias_map_df.columns:
                 if '等价科目名' in col and pd.notna(row[col]):
-                    aliases = [normalize_name(alias) for alias in str(row[col]).split(',')] # 清洗别名
+                    aliases = [normalize_name(alias) for alias in str(row[col]).split(',')]
                     for alias in aliases:
-                        if alias: alias_lookup[alias] = standard
+                        if alias: alias_lookup[alias] = (standard_clean, subj_type)
 
-    src_dict = {}
-    for i in range(1, ws_src.max_row + 1):
-        name_a_raw = ws_src[f"A{i}"].value
-        if name_a_raw:
-            name_a_clean = normalize_name(name_a_raw)
-            if name_a_clean:
-                name_std = alias_lookup.get(name_a_clean, name_a_clean)
-                src_dict[name_std] = {"期初": ws_src[f"C{i}"].value, "期末": ws_src[f"D{i}"].value}
-
-        name_e_raw = ws_src[f"E{i}"].value
-        if name_e_raw:
-            name_e_clean = normalize_name(name_e_raw)
-            if name_e_clean:
-                name_std = alias_lookup.get(name_e_clean, name_e_clean)
-                if name_std not in src_dict:
-                     src_dict[name_std] = {"期初": ws_src[f"G{i}"].value, "期末": ws_src[f"H{i}"].value}
-    
     records = []
     year = (re.search(r'(\d{4})', sheet_name) or [None, "未知"])[1]
 
-    for subject_name, values in src_dict.items():
-        # 这里我们也使用清洗后的标准名进行比较
-        total_subjects_clean = {normalize_name(s) for s in ['资产总计', '负债合计', '净资产合计', '流动资产合计', '非流动资产合计', '流动负债合计', '非流动负债合计']}
-        subject_type = '合计' if subject_name in total_subjects_clean else '普通'
+    # --- 主流程: 遍历`资产负债表区块`中的每一个配置行 ---
+    for _, block_row in blocks_df.iterrows():
+        block_name = block_row.get('区块名称')
+        if pd.isna(block_name): continue
 
-        records.append({
-            "来源Sheet": sheet_name, "报表类型": "资产负债表", "年份": year,
-            "项目": subject_name, "科目类型": subject_type,
-            "期初金额": values["期初"], "期末金额": values["期末"]
-        })
-        
+        # --- 核心修复：从“起始单元格”动态、虚拟地生成“科目搜索列” ---
+        start_row, search_col = _get_row_and_col_from_address(block_row['起始单元格'])
+        end_row, _ = _get_row_and_col_from_address(block_row['终止单元格']) # 终止单元格的列字母我们不关心
+
+        if not start_row or not end_row or not search_col:
+            logger.warning(f"处理区块'{block_name}'时，起始/终止单元格格式不正确或无法提取搜索列，已跳过。")
+            continue
+
+        logger.debug(f"处理区块'{block_name}': 在'{search_col}'列, 扫描行 {start_row}-{end_row}")
+
+        # 在区块定义的行号范围内，精准地扫描推断出的“科目搜索列”
+        for r_idx in range(start_row, end_row + 1):
+            cell_val = ws_src[f"{search_col}{r_idx}"].value
+            if not cell_val: continue
+            
+            subject_name_clean = normalize_name(cell_val)
+            if not subject_name_clean: continue
+
+            # --- 智能分类 ---
+            if subject_name_clean in alias_lookup:
+                standard_name, subject_type = alias_lookup[subject_name_clean]
+            else:
+                standard_name, subject_type = subject_name_clean, '普通'
+
+            start_val_col, end_val_col = block_row['源期初列'], block_row['源期末列']
+            start_val = ws_src[f"{start_val_col}{r_idx}"].value
+            end_val = ws_src[f"{end_val_col}{r_idx}"].value
+
+            records.append({
+                "来源Sheet": sheet_name, "报表类型": "资产负债表", "年份": year,
+                "项目": standard_name,
+                "所属区块": block_name, # <-- 现在可以正确地打上标签
+                "科目类型": subject_type,
+                "期初金额": start_val, "期末金额": end_val
+            })
+            
     logger.info(f"--- 资产负债表 '{sheet_name}' 处理完成，生成 {len(records)} 条记录。---")
     return records
