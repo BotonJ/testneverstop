@@ -2,7 +2,7 @@ import pandas as pd
 
 # --- 配置 ---
 # 请确保这个文件名与您的 mapping 文件名完全一致
-MAPPING_FILE = r"D:\python脚本合集\审计自动化\my_github_repos\换届审计_pandas\data\mapping_file.xlsx"
+MAPPING_FILE = r"C:\审计自动化\my_github_repos\换届审计_pandas\data\mapping_file.xlsx"
 
 def print_mapping_headers(filepath: str):
     """

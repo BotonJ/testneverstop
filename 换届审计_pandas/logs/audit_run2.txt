@@ -1,0 +1,200 @@
+2025-07-14 20:31:23,784 - AuditReportLogger - INFO - main.run_audit_report:17 - ========================================
+2025-07-14 20:31:23,784 - AuditReportLogger - INFO - main.run_audit_report:18 - ===    自动化审计报告生成流程启动    ===
+2025-07-14 20:31:23,784 - AuditReportLogger - INFO - main.run_audit_report:19 - ========================================
+2025-07-14 20:31:23,785 - AuditReportLogger - INFO - main.run_audit_report:29 - 
+--- [流程一] 开始执行Pandas数据分析与复核 ---
+2025-07-14 20:31:23,785 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:21 - --- 开始执行【最终修复版 V4】数据提取流程 ---
+2025-07-14 20:31:23,785 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:12 - --- 开始使用原始逻辑精确解析 mapping_file.xlsx ---
+2025-07-14 20:31:23,915 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:41 - 成功解析'业务活动表汇总注入配置'，识别出类型: ['收入', '费用']
+2025-07-14 20:31:23,915 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:46 - --- mapping_file.xlsx 解析完成 ---
+2025-07-14 20:31:23,981 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:42 - --- [Pass 1/2] 正在处理所有资产负债表... ---
+2025-07-14 20:31:23,982 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:23 - --- 开始处理资产负债表: '2025年资产负债表' (使用最终版'智能推断'逻辑) ---
+2025-07-14 20:31:23,983 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产': 在'A'列, 扫描行 6-13
+2025-07-14 20:31:23,984 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产合计': 在'A'列, 扫描行 13-13
+2025-07-14 20:31:23,984 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动资产': 在'A'列, 扫描行 16-33
+2025-07-14 20:31:23,984 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'资产总计': 在'A'列, 扫描行 35-35
+2025-07-14 20:31:23,984 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债': 在'E'列, 扫描行 6-14
+2025-07-14 20:31:23,985 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债合计': 在'E'列, 扫描行 15-15
+2025-07-14 20:31:23,985 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动负债': 在'E'列, 扫描行 17-24
+2025-07-14 20:31:23,985 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'长期负债合计': 在'E'列, 扫描行 21-21
+2025-07-14 20:31:23,985 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债合计': 在'E'列, 扫描行 25-25
+2025-07-14 20:31:23,985 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产': 在'E'列, 扫描行 28-30
+2025-07-14 20:31:23,985 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产合计': 在'E'列, 扫描行 31-31
+2025-07-14 20:31:23,985 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债和净资产总计': 在'E'列, 扫描行 33-33
+2025-07-14 20:31:23,985 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:83 - --- 资产负债表 '2025年资产负债表' 处理完成，生成 50 条记录。---
+2025-07-14 20:31:23,988 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:23 - --- 开始处理资产负债表: '2024年资产负债表' (使用最终版'智能推断'逻辑) ---
+2025-07-14 20:31:23,990 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产': 在'A'列, 扫描行 6-13
+2025-07-14 20:31:23,990 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产合计': 在'A'列, 扫描行 13-13
+2025-07-14 20:31:23,990 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动资产': 在'A'列, 扫描行 16-33
+2025-07-14 20:31:23,990 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'资产总计': 在'A'列, 扫描行 35-35
+2025-07-14 20:31:23,990 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债': 在'E'列, 扫描行 6-14
+2025-07-14 20:31:23,991 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债合计': 在'E'列, 扫描行 15-15
+2025-07-14 20:31:23,991 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动负债': 在'E'列, 扫描行 17-24
+2025-07-14 20:31:23,991 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'长期负债合计': 在'E'列, 扫描行 21-21
+2025-07-14 20:31:23,991 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债合计': 在'E'列, 扫描行 25-25
+2025-07-14 20:31:23,991 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产': 在'E'列, 扫描行 28-30
+2025-07-14 20:31:23,991 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产合计': 在'E'列, 扫描行 31-31
+2025-07-14 20:31:23,991 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债和净资产总计': 在'E'列, 扫描行 33-33
+2025-07-14 20:31:23,991 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:83 - --- 资产负债表 '2024年资产负债表' 处理完成，生成 49 条记录。---
+2025-07-14 20:31:23,993 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:23 - --- 开始处理资产负债表: '2023年资产负债表' (使用最终版'智能推断'逻辑) ---
+2025-07-14 20:31:23,994 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产': 在'A'列, 扫描行 6-13
+2025-07-14 20:31:23,994 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产合计': 在'A'列, 扫描行 13-13
+2025-07-14 20:31:23,994 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动资产': 在'A'列, 扫描行 16-33
+2025-07-14 20:31:23,994 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'资产总计': 在'A'列, 扫描行 35-35
+2025-07-14 20:31:23,995 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债': 在'E'列, 扫描行 6-14
+2025-07-14 20:31:23,995 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债合计': 在'E'列, 扫描行 15-15
+2025-07-14 20:31:23,995 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动负债': 在'E'列, 扫描行 17-24
+2025-07-14 20:31:23,995 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'长期负债合计': 在'E'列, 扫描行 21-21
+2025-07-14 20:31:23,995 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债合计': 在'E'列, 扫描行 25-25
+2025-07-14 20:31:23,995 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产': 在'E'列, 扫描行 28-30
+2025-07-14 20:31:23,996 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产合计': 在'E'列, 扫描行 31-31
+2025-07-14 20:31:23,996 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债和净资产总计': 在'E'列, 扫描行 33-33
+2025-07-14 20:31:23,996 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:83 - --- 资产负债表 '2023年资产负债表' 处理完成，生成 49 条记录。---
+2025-07-14 20:31:23,997 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:23 - --- 开始处理资产负债表: '2022年资产负债表' (使用最终版'智能推断'逻辑) ---
+2025-07-14 20:31:23,998 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产': 在'A'列, 扫描行 6-13
+2025-07-14 20:31:23,998 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产合计': 在'A'列, 扫描行 13-13
+2025-07-14 20:31:23,999 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动资产': 在'A'列, 扫描行 16-33
+2025-07-14 20:31:23,999 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'资产总计': 在'A'列, 扫描行 35-35
+2025-07-14 20:31:23,999 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债': 在'E'列, 扫描行 6-14
+2025-07-14 20:31:23,999 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债合计': 在'E'列, 扫描行 15-15
+2025-07-14 20:31:23,999 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动负债': 在'E'列, 扫描行 17-24
+2025-07-14 20:31:23,999 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'长期负债合计': 在'E'列, 扫描行 21-21
+2025-07-14 20:31:24,000 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债合计': 在'E'列, 扫描行 25-25
+2025-07-14 20:31:24,000 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产': 在'E'列, 扫描行 28-30
+2025-07-14 20:31:24,000 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产合计': 在'E'列, 扫描行 31-31
+2025-07-14 20:31:24,000 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债和净资产总计': 在'E'列, 扫描行 33-33
+2025-07-14 20:31:24,000 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:83 - --- 资产负债表 '2022年资产负债表' 处理完成，生成 49 条记录。---
+2025-07-14 20:31:24,001 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:23 - --- 开始处理资产负债表: '2021年资产负债表' (使用最终版'智能推断'逻辑) ---
+2025-07-14 20:31:24,002 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产': 在'A'列, 扫描行 6-13
+2025-07-14 20:31:24,003 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产合计': 在'A'列, 扫描行 13-13
+2025-07-14 20:31:24,003 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动资产': 在'A'列, 扫描行 16-33
+2025-07-14 20:31:24,003 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'资产总计': 在'A'列, 扫描行 35-35
+2025-07-14 20:31:24,003 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债': 在'E'列, 扫描行 6-14
+2025-07-14 20:31:24,003 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债合计': 在'E'列, 扫描行 15-15
+2025-07-14 20:31:24,003 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动负债': 在'E'列, 扫描行 17-24
+2025-07-14 20:31:24,004 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'长期负债合计': 在'E'列, 扫描行 21-21
+2025-07-14 20:31:24,004 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债合计': 在'E'列, 扫描行 25-25
+2025-07-14 20:31:24,004 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产': 在'E'列, 扫描行 28-30
+2025-07-14 20:31:24,004 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产合计': 在'E'列, 扫描行 31-31
+2025-07-14 20:31:24,004 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债和净资产总计': 在'E'列, 扫描行 33-33
+2025-07-14 20:31:24,004 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:83 - --- 资产负债表 '2021年资产负债表' 处理完成，生成 49 条记录。---
+2025-07-14 20:31:24,005 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:23 - --- 开始处理资产负债表: '2020z' (使用最终版'智能推断'逻辑) ---
+2025-07-14 20:31:24,006 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产': 在'A'列, 扫描行 6-13
+2025-07-14 20:31:24,007 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产合计': 在'A'列, 扫描行 13-13
+2025-07-14 20:31:24,007 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动资产': 在'A'列, 扫描行 16-33
+2025-07-14 20:31:24,007 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'资产总计': 在'A'列, 扫描行 35-35
+2025-07-14 20:31:24,007 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债': 在'E'列, 扫描行 6-14
+2025-07-14 20:31:24,007 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债合计': 在'E'列, 扫描行 15-15
+2025-07-14 20:31:24,007 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动负债': 在'E'列, 扫描行 17-24
+2025-07-14 20:31:24,008 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'长期负债合计': 在'E'列, 扫描行 21-21
+2025-07-14 20:31:24,008 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债合计': 在'E'列, 扫描行 25-25
+2025-07-14 20:31:24,008 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产': 在'E'列, 扫描行 28-30
+2025-07-14 20:31:24,008 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产合计': 在'E'列, 扫描行 31-31
+2025-07-14 20:31:24,008 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债和净资产总计': 在'E'列, 扫描行 33-33
+2025-07-14 20:31:24,008 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:83 - --- 资产负债表 '2020z' 处理完成，生成 49 条记录。---
+2025-07-14 20:31:24,009 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:23 - --- 开始处理资产负债表: '2019Z' (使用最终版'智能推断'逻辑) ---
+2025-07-14 20:31:24,010 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产': 在'A'列, 扫描行 6-13
+2025-07-14 20:31:24,011 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动资产合计': 在'A'列, 扫描行 13-13
+2025-07-14 20:31:24,011 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动资产': 在'A'列, 扫描行 16-33
+2025-07-14 20:31:24,011 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'资产总计': 在'A'列, 扫描行 35-35
+2025-07-14 20:31:24,011 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债': 在'E'列, 扫描行 6-14
+2025-07-14 20:31:24,012 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'流动负债合计': 在'E'列, 扫描行 15-15
+2025-07-14 20:31:24,012 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'非流动负债': 在'E'列, 扫描行 17-24
+2025-07-14 20:31:24,012 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'长期负债合计': 在'E'列, 扫描行 21-21
+2025-07-14 20:31:24,012 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债合计': 在'E'列, 扫描行 25-25
+2025-07-14 20:31:24,012 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产': 在'E'列, 扫描行 28-30
+2025-07-14 20:31:24,012 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'净资产合计': 在'E'列, 扫描行 31-31
+2025-07-14 20:31:24,012 - AuditReportLogger - DEBUG - balance_sheet_processor.process_balance_sheet:57 - 处理区块'负债和净资产总计': 在'E'列, 扫描行 33-33
+2025-07-14 20:31:24,013 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:83 - --- 资产负债表 '2019Z' 处理完成，生成 49 条记录。---
+2025-07-14 20:31:24,014 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:68 - --- [Pass 2/2] 正在处理所有业务活动表... ---
+2025-07-14 20:31:24,014 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2025年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-14 20:31:24,015 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: -207671.1399999999
+2025-07-14 20:31:24,015 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2025年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-14 20:31:24,016 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2024年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-14 20:31:24,016 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: -99720.63000000012
+2025-07-14 20:31:24,016 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2024年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-14 20:31:24,017 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2023年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-14 20:31:24,017 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: 385726.20999999996
+2025-07-14 20:31:24,017 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2023年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-14 20:31:24,017 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2022年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-14 20:31:24,018 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: 49802.64000000013
+2025-07-14 20:31:24,018 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2022年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-14 20:31:24,019 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2021年业务活动表' (使用最终版健壮逻辑) ---
+2025-07-14 20:31:24,019 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: -190852.41000000015
+2025-07-14 20:31:24,019 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2021年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-14 20:31:24,020 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2020Y' (使用最终版健壮逻辑) ---
+2025-07-14 20:31:24,020 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: 188584.4800000002
+2025-07-14 20:31:24,020 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2020Y' 处理完成，最终生成 16 条记录。---
+2025-07-14 20:31:24,020 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:12 - --- 开始处理业务活动表: '2019y' (使用最终版健壮逻辑) ---
+2025-07-14 20:31:24,021 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:79 - 自动计算'净资产变动额'完成，值为: -242749.75
+2025-07-14 20:31:24,021 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:81 - --- 业务活动表 '2019y' 处理完成，最终生成 16 条记录。---
+2025-07-14 20:31:24,025 - AuditReportLogger - INFO - legacy_runner.run_legacy_extraction:98 - --- 数据提取流程结束，成功生成包含 456 条记录的DataFrame。---
+2025-07-14 20:31:24,025 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:13 - 开始进行数据透视和清理...
+2025-07-14 20:31:24,045 - AuditReportLogger - INFO - data_processor._pivot:30 - 普通科目数据透视完成。
+2025-07-14 20:31:24,054 - AuditReportLogger - INFO - data_processor._pivot:30 - 合计科目数据透视完成。
+2025-07-14 20:31:24,055 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:36 - 开始执行业务活动表数据自动衔接...
+2025-07-14 20:31:24,059 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'其中:捐赠收入'项目2020年的上期金额更新为2019年的本期金额(0.0)。
+2025-07-14 20:31:24,059 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'提供服务收入'项目2020年的上期金额更新为2019年的本期金额(0.0)。
+2025-07-14 20:31:24,060 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'投资收益'项目2020年的上期金额更新为2019年的本期金额(0.0)。
+2025-07-14 20:31:24,061 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'其他收入'项目2020年的上期金额更新为2019年的本期金额(0.0)。
+2025-07-14 20:31:24,061 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'(三)筹资费用'项目2020年的上期金额更新为2019年的本期金额(0.0)。
+2025-07-14 20:31:24,062 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'四、限定性净资产转为非限定性净资产'项目2020年的上期金额更新为2019年的本期金额(0.0)。
+2025-07-14 20:31:24,062 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'净资产变动额'项目2020年的上期金额更新为2019年的本期金额(-242749.75)。
+2025-07-14 20:31:24,064 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'其中:捐赠收入'项目2021年的上期金额更新为2020年的本期金额(0.0)。
+2025-07-14 20:31:24,065 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'提供服务收入'项目2021年的上期金额更新为2020年的本期金额(0.0)。
+2025-07-14 20:31:24,066 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'投资收益'项目2021年的上期金额更新为2020年的本期金额(0.0)。
+2025-07-14 20:31:24,066 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'其他收入'项目2021年的上期金额更新为2020年的本期金额(0.0)。
+2025-07-14 20:31:24,067 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'(三)筹资费用'项目2021年的上期金额更新为2020年的本期金额(0.0)。
+2025-07-14 20:31:24,069 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'四、限定性净资产转为非限定性净资产'项目2021年的上期金额更新为2020年的本期金额(0.0)。
+2025-07-14 20:31:24,070 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'净资产变动额'项目2021年的上期金额更新为2020年的本期金额(188584.4800000002)。
+2025-07-14 20:31:24,073 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'其中:捐赠收入'项目2022年的上期金额更新为2021年的本期金额(0.0)。
+2025-07-14 20:31:24,073 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'提供服务收入'项目2022年的上期金额更新为2021年的本期金额(0.0)。
+2025-07-14 20:31:24,074 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'投资收益'项目2022年的上期金额更新为2021年的本期金额(0.0)。
+2025-07-14 20:31:24,075 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'(三)筹资费用'项目2022年的上期金额更新为2021年的本期金额(0.0)。
+2025-07-14 20:31:24,076 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'四、限定性净资产转为非限定性净资产'项目2022年的上期金额更新为2021年的本期金额(0.0)。
+2025-07-14 20:31:24,076 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'净资产变动额'项目2022年的上期金额更新为2021年的本期金额(-190852.41000000015)。
+2025-07-14 20:31:24,078 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'其中:捐赠收入'项目2023年的上期金额更新为2022年的本期金额(0.0)。
+2025-07-14 20:31:24,079 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'提供服务收入'项目2023年的上期金额更新为2022年的本期金额(0.0)。
+2025-07-14 20:31:24,079 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'投资收益'项目2023年的上期金额更新为2022年的本期金额(0.0)。
+2025-07-14 20:31:24,080 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'(三)筹资费用'项目2023年的上期金额更新为2022年的本期金额(0.0)。
+2025-07-14 20:31:24,081 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'四、限定性净资产转为非限定性净资产'项目2023年的上期金额更新为2022年的本期金额(0.0)。
+2025-07-14 20:31:24,081 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'净资产变动额'项目2023年的上期金额更新为2022年的本期金额(49802.64000000013)。
+2025-07-14 20:31:24,083 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'提供服务收入'项目2024年的上期金额更新为2023年的本期金额(0.0)。
+2025-07-14 20:31:24,083 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'投资收益'项目2024年的上期金额更新为2023年的本期金额(0.0)。
+2025-07-14 20:31:24,084 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'(三)筹资费用'项目2024年的上期金额更新为2023年的本期金额(0.0)。
+2025-07-14 20:31:24,085 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'四、限定性净资产转为非限定性净资产'项目2024年的上期金额更新为2023年的本期金额(0.0)。
+2025-07-14 20:31:24,085 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'净资产变动额'项目2024年的上期金额更新为2023年的本期金额(385726.20999999996)。
+2025-07-14 20:31:24,087 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'提供服务收入'项目2025年的上期金额更新为2024年的本期金额(0.0)。
+2025-07-14 20:31:24,088 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'政府补助收入'项目2025年的上期金额更新为2024年的本期金额(0.0)。
+2025-07-14 20:31:24,088 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'投资收益'项目2025年的上期金额更新为2024年的本期金额(0.0)。
+2025-07-14 20:31:24,089 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'(三)筹资费用'项目2025年的上期金额更新为2024年的本期金额(0.0)。
+2025-07-14 20:31:24,089 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'四、限定性净资产转为非限定性净资产'项目2025年的上期金额更新为2024年的本期金额(0.0)。
+2025-07-14 20:31:24,090 - AuditReportLogger - DEBUG - data_processor.pivot_and_clean_data:57 - 数据衔接: 已将'净资产变动额'项目2025年的上期金额更新为2024年的本期金额(-99720.63000000012)。
+2025-07-14 20:31:24,090 - AuditReportLogger - INFO - data_processor.pivot_and_clean_data:59 - 数据透视和清理完成 (已包含数据衔接)。
+2025-07-14 20:31:24,090 - AuditReportLogger - INFO - data_processor.calculate_summary_values:65 - 开始计算最终汇总指标...
+2025-07-14 20:31:24,094 - AuditReportLogger - INFO - data_processor.calculate_summary_values:90 - 所有汇总指标计算完成。
+2025-07-14 20:31:24,094 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:12 - --- 开始使用原始逻辑精确解析 mapping_file.xlsx ---
+2025-07-14 20:31:24,206 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:41 - 成功解析'业务活动表汇总注入配置'，识别出类型: ['收入', '费用']
+2025-07-14 20:31:24,207 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:46 - --- mapping_file.xlsx 解析完成 ---
+2025-07-14 20:31:24,207 - AuditReportLogger - INFO - data_validator.run_all_checks:8 - --- [复核机制] 开始执行所有数据检查... ---
+2025-07-14 20:31:24,208 - AuditReportLogger - INFO - data_validator.run_all_checks:21 -   -> 正在执行: 业务活动表内部分项核对...
+2025-07-14 20:31:24,211 - AuditReportLogger - INFO - data_validator.run_all_checks:36 -   -> 正在执行: 资产负债表内部分项核对...
+2025-07-14 20:31:24,222 - AuditReportLogger - INFO - data_validator.run_all_checks:45 -   -> 正在执行: 核心勾稽关系检查...
+2025-07-14 20:31:24,226 - AuditReportLogger - INFO - data_validator.run_all_checks:48 - --- [复核机制] 所有数据检查执行完毕。 ---
+2025-07-14 20:31:24,231 - AuditReportLogger - INFO - main.run_audit_report:48 - 
+--- [流程二] 开始生成格式化的'新soce'报告 ---
+2025-07-14 20:31:24,231 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:12 - --- 开始使用原始逻辑精确解析 mapping_file.xlsx ---
+2025-07-14 20:31:24,344 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:41 - 成功解析'业务活动表汇总注入配置'，识别出类型: ['收入', '费用']
+2025-07-14 20:31:24,345 - AuditReportLogger - INFO - mapping_loader.load_mapping_file:46 - --- mapping_file.xlsx 解析完成 ---
+2025-07-14 20:31:24,441 - AuditReportLogger - INFO - classic_report_generator.__init__:20 - 经典报告生成器已初始化。
+2025-07-14 20:31:24,442 - AuditReportLogger - INFO - classic_report_generator.create_report:104 - --- [经典流程移植] 开始生成格式化的'新soce'... ---
+2025-07-14 20:31:24,442 - AuditReportLogger - WARNING - classic_report_generator.create_report:119 - 在源文件中未找到与模板Sheet '资产负债表' 匹配的任何源Sheet。
+2025-07-14 20:31:24,443 - AuditReportLogger - WARNING - classic_report_generator.create_report:119 - 在源文件中未找到与模板Sheet '业务活动表' 匹配的任何源Sheet。
+2025-07-14 20:31:24,443 - AuditReportLogger - WARNING - classic_report_generator.create_report:119 - 在源文件中未找到与模板Sheet '资产负债变动' 匹配的任何源Sheet。
+2025-07-14 20:31:24,443 - AuditReportLogger - WARNING - classic_report_generator.create_report:119 - 在源文件中未找到与模板Sheet '收入汇总' 匹配的任何源Sheet。
+2025-07-14 20:31:24,443 - AuditReportLogger - WARNING - classic_report_generator.create_report:119 - 在源文件中未找到与模板Sheet '支出汇总' 匹配的任何源Sheet。
+2025-07-14 20:31:24,516 - AuditReportLogger - INFO - classic_report_generator.create_report:123 - ✅ '新soce'已成功生成到: C:\审计自动化\my_github_repos\换届审计_pandas\output\final_report.xlsx
+2025-07-14 20:31:24,517 - AuditReportLogger - INFO - main.run_audit_report:58 - 
+========================================
+2025-07-14 20:31:24,517 - AuditReportLogger - INFO - main.run_audit_report:59 - ===         流程执行完毕           ===
+2025-07-14 20:31:24,517 - AuditReportLogger - INFO - main.run_audit_report:60 - ========================================

@@ -1,78 +1,79 @@
 # /main.py
+
 import sys
 import os
 import json
-from src.utils.logger_config import logger
+import logging
+
+# --- [修复] 修正模块导入路径和函数名 ---
+# 根据您的项目结构，从 'modules' 导入 'load_mapping_file'
+from modules.mapping_loader import load_mapping_file
 from src.legacy_runner import run_legacy_extraction
 from src.data_processor import pivot_and_clean_data, calculate_summary_values
 from src.data_validator import run_all_checks
-from src.report_writer import ReportWriter # <-- 导入新的报告生成器
-from modules.mapping_loader import load_mapping_file
 
-SRC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src')
-if SRC_PATH not in sys.path:
-    sys.path.append(SRC_PATH)
+# 直接配置日志
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
+
+# --- 确保 'src' 和 'modules' 目录都在Python的搜索路径中 ---
+project_root = os.path.dirname(os.path.abspath(__file__))
+for folder in ['src', 'modules']:
+    path_to_add = os.path.join(project_root, folder)
+    if path_to_add not in sys.path:
+        sys.path.append(path_to_add)
 
 def run_audit_report():
     logger.info("========================================")
     logger.info("===    自动化审计报告生成流程启动    ===")
     logger.info("========================================")
 
-    project_root = os.path.dirname(os.path.abspath(__file__))
+    # --- 文件路径管理 ---
     source_file = os.path.join(project_root, 'data', 'soce.xlsx')
     mapping_file = os.path.join(project_root, 'data', 'mapping_file.xlsx')
-    output_file = os.path.join(project_root, 'output', 'final_audit_report.xlsx') # <-- 定义最终输出文件名
-    os.makedirs(os.path.join(project_root, 'output'), exist_ok=True) # 确保输出目录存在
+    os.makedirs(os.path.join(project_root, 'output'), exist_ok=True)
     
-    logger.info(f"源文件路径: {source_file}")
-    logger.info(f"映射文件路径: {mapping_file}")
-    logger.info(f"最终报告输出路径: {output_file}")
-
-    # --- 步骤 1/5: 数据提取 ---
-    logger.info("\n--- [步骤 1/5] 执行数据提取 ---")
-    raw_df = run_legacy_extraction(source_file, mapping_file)
-    if raw_df is None or raw_df.empty: return
-    logger.info("✅ 数据提取成功！")
-
-    # --- 步骤 2/5: 数据处理与计算 ---
-    logger.info("\n--- [步骤 2/5] 执行数据处理与计算 ---")
-    pivoted_normal_df, pivoted_total_df = pivot_and_clean_data(raw_df)
-    if pivoted_total_df is None or pivoted_total_df.empty: return
-    logger.info("✅ 数据透视与清理成功！")
-        
-    final_summary_dict = calculate_summary_values(pivoted_total_df, raw_df)
-    if not final_summary_dict: return
-    logger.info("✅ 最终汇总指标计算成功！")
+    # --- [流程一] 加载配置并提取数据 ---
+    logger.info("\n--- [流程一] 开始加载配置并提取数据 ---")
     
-    # --- 步骤 3/5: 执行数据复核 ---
-    logger.info("\n--- [步骤 3/5] 执行数据复核 ---")
+    # 1a. 加载配置文件，得到配置字典
     full_mapping = load_mapping_file(mapping_file)
-    verification_results = run_all_checks(pivoted_normal_df, pivoted_total_df, raw_df, full_mapping)
-    logger.info("✅ 数据复核完成！")
+    if not full_mapping:
+        logger.error("配置文件加载失败，流程终止。")
+        return
 
-    # --- 步骤 4/5: 生成最终Excel报告 ---
-    logger.info("\n--- [步骤 4/5] 执行报告生成与注入 ---")
-    writer = ReportWriter(output_file)
-    writer.generate_full_report(
-        summary_dict=final_summary_dict,
-        verification_results=verification_results,
-        normal_df=pivoted_normal_df,
-        total_df=pivoted_total_df,
-        mapping=full_mapping
-    )
-    logger.info("✅ 报告生成完毕！")
-
-    # --- 步骤 5/5: 在终端展示简报 ---
-    logger.info("\n--- [步骤 5/5] 在终端展示简报 ---")
-    print("\n" + "="*25 + " 最终计算结果 " + "="*25)
-    print(json.dumps(final_summary_dict, indent=4, ensure_ascii=False))
-    print("="*68)
-    print("\n" + "="*27 + " 复核报告摘要 " + "="*27)
-    for line in verification_results: print(line)
-    print("="*68)
+    # 1b. [修复] 将加载好的配置字典(full_mapping)传递给提取函数
+    raw_df = run_legacy_extraction(source_file, full_mapping)
     
+    if raw_df is not None and not raw_df.empty:
+        logger.info("\n--- [流程二] 开始处理数据并计算核心指标 ---")
+        pivoted_normal_df, pivoted_total_df = pivot_and_clean_data(raw_df)
+        
+        # --- [BUG修复] 传入函数所需的 'raw_df' 参数 ---
+        final_summary_dict = calculate_summary_values(pivoted_total_df, raw_df)
+        
+        logger.info("\n--- [流程三] 开始执行数据交叉复核 (目标A) ---")
+        verification_results_list, _ = run_all_checks(raw_df, pivoted_total_df, final_summary_dict, full_mapping)
+        
+        # --- 在终端打印分析结果 ---
+        print("\n" + "="*25 + " Pandas分析结果 " + "="*25)
+        # 使用default=str来处理可能无法序列化的数据类型
+        print(json.dumps(final_summary_dict, indent=4, ensure_ascii=False, default=str)) 
+        print("\n" + "="*27 + " 复核报告摘要 " + "="*27)
+        if verification_results_list:
+            for line in verification_results_list:
+                print(line)
+        else:
+            print("✅ 复核机制未发现问题。")
+        print("="*68)
+    else:
+        logger.error("数据提取失败，无法进行后续分析。")
+
+    # --- 目标B已暂停 ---
+    # logger.info("\n--- [流程四] 开始生成格式化的'新soce'报告 ---")
+
     logger.info("\n========================================")
-    logger.info("===         流程执行完毕           ===")
+    logger.info("===           流程执行完毕           ===")
     logger.info("========================================")
 
 if __name__ == '__main__':

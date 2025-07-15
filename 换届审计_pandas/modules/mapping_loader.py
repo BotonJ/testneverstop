@@ -1,48 +1,65 @@
 # /modules/mapping_loader.py
+
 import pandas as pd
 import openpyxl
-from src.utils.logger_config import logger
-from modules.utils import normalize_name
+import logging
+from typing import Dict
 
-def load_mapping_file(path):
+logger = logging.getLogger(__name__)
+
+def load_mapping_file(path: str) -> Dict[str, pd.DataFrame]:
     """
-    【最终版 V3 - 忠于原始逻辑】
-    精确解析mapping_file，并增加对业务活动表汇总配置的解析。
+    【全新修复版】
+    读取指定的mapping_file.xlsx文件，并将其所有Sheet页加载到一个字典中。
+    字典的键（key）将是Excel中真实的Sheet页名称。
+
+    Args:
+        path (str): mapping_file.xlsx 的文件路径。
+
+    Returns:
+        Dict[str, pd.DataFrame]: 一个以Sheet名为键，以DataFrame为值的配置字典。
+                                 如果文件不存在或为空，返回一个空字典。
     """
-    logger.info("--- 开始使用原始逻辑精确解析 mapping_file.xlsx ---")
     try:
-        wb = openpyxl.load_workbook(path, data_only=True)
+        # 使用 openpyxl 先获取所有真实的sheet名称
+        workbook = openpyxl.load_workbook(path, read_only=True)
+        sheet_names = workbook.sheetnames
+        workbook.close()
+
+        if not sheet_names:
+            logger.error(f"配置文件 '{path}' 中未发现任何Sheet页。")
+            return {}
+
+        # 使用 pandas.read_excel 一次性读取所有sheet
+        # 设置 sheet_name=None 会返回一个以sheet名为键的字典
+        mapping_configs = pd.read_excel(path, sheet_name=None)
+        
+        logger.info(f"成功从 '{path}' 加载了 {len(mapping_configs)} 个配置Sheet: {list(mapping_configs.keys())}")
+        
+        return mapping_configs
+
     except FileNotFoundError:
-        logger.error(f"映射文件未找到: {path}")
+        logger.error(f"指定的配置文件未找到: {path}")
+        return {}
+    except Exception as e:
+        logger.error(f"读取配置文件 '{path}' 时发生未知错误: {e}", exc_info=True)
         return {}
 
-    all_mappings = {}
+# --- 保留旧函数以防万一，但新流程不再使用它们 ---
+def get_col_index(df, col_name):
+    try:
+        return df.columns.get_loc(col_name) + 1
+    except KeyError:
+        return None
 
-    def _load_sheet_as_df(sheet_name):
-        if sheet_name in wb.sheetnames:
-            return pd.read_excel(path, sheet_name=sheet_name)
-        logger.warning(f"在mapping_file中未找到名为'{sheet_name}'的Sheet。")
-        return pd.DataFrame()
+def parse_skip_rows(skip_str):
+    if not skip_str or pd.isna(skip_str):
+        return []
+    return [int(x.strip()) for x in str(skip_str).split(',') if x.strip()]
 
-    all_mappings["blocks_df"] = _load_sheet_as_df("资产负债表区块")
-    all_mappings["alias_map_df"] = _load_sheet_as_df("科目等价映射")
-    
-    df_yewu = _load_sheet_as_df("业务活动表逐行")
-    all_mappings["yewu_line_map"] = df_yewu.dropna(how='all').to_dict('records')
-
-    yewu_subtotal_config = {}
-    df_yewu_summary = _load_sheet_as_df("业务活动表汇总注入配置")
-    if not df_yewu_summary.empty:
-        if all(col in df_yewu_summary.columns for col in ['类型', '科目名称']):
-            # 对科目名称进行清洗
-            df_yewu_summary['科目名称'] = df_yewu_summary['科目名称'].apply(lambda x: normalize_name(x) if pd.notna(x) else "")
-            grouped = df_yewu_summary.groupby('类型')['科目名称'].apply(list)
-            yewu_subtotal_config = grouped.to_dict()
-            logger.info(f"成功解析'业务活动表汇总注入配置'，识别出类型: {list(yewu_subtotal_config.keys())}")
-        else:
-            logger.error("'业务活动表汇总注入配置'缺少'类型'或'科目名称'列，无法用于复核。")
-    all_mappings["yewu_subtotal_config"] = yewu_subtotal_config
-    
-    logger.info("--- mapping_file.xlsx 解析完成 ---")
-    
-    return all_mappings
+def load_full_mapping_as_df(path):
+    # 这个函数可能在其他地方仍有使用，暂时保留
+    try:
+        return pd.read_excel(path, sheet_name=None)
+    except FileNotFoundError:
+        return None

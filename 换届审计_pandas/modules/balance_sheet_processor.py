@@ -25,7 +25,6 @@ def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
         logger.warning(f"'{sheet_name}': '资产负债表区块'配置为空，跳过处理。")
         return []
 
-    # --- 准备工作: 构建一个包含所有科目（含类型）的查找字典 ---
     alias_lookup = {}
     if alias_map_df is not None and not alias_map_df.empty:
         for _, row in alias_map_df.iterrows():
@@ -44,14 +43,12 @@ def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
     records = []
     year = (re.search(r'(\d{4})', sheet_name) or [None, "未知"])[1]
 
-    # --- 主流程: 遍历`资产负债表区块`中的每一个配置行 ---
     for _, block_row in blocks_df.iterrows():
         block_name = block_row.get('区块名称')
         if pd.isna(block_name): continue
 
-        # --- 核心修复：从“起始单元格”动态、虚拟地生成“科目搜索列” ---
         start_row, search_col = _get_row_and_col_from_address(block_row['起始单元格'])
-        end_row, _ = _get_row_and_col_from_address(block_row['终止单元格']) # 终止单元格的列字母我们不关心
+        end_row, _ = _get_row_and_col_from_address(block_row['终止单元格'])
 
         if not start_row or not end_row or not search_col:
             logger.warning(f"处理区块'{block_name}'时，起始/终止单元格格式不正确或无法提取搜索列，已跳过。")
@@ -59,7 +56,6 @@ def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
 
         logger.debug(f"处理区块'{block_name}': 在'{search_col}'列, 扫描行 {start_row}-{end_row}")
 
-        # 在区块定义的行号范围内，精准地扫描推断出的“科目搜索列”
         for r_idx in range(start_row, end_row + 1):
             cell_val = ws_src[f"{search_col}{r_idx}"].value
             if not cell_val: continue
@@ -67,7 +63,6 @@ def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
             subject_name_clean = normalize_name(cell_val)
             if not subject_name_clean: continue
 
-            # --- 智能分类 ---
             if subject_name_clean in alias_lookup:
                 standard_name, subject_type = alias_lookup[subject_name_clean]
             else:
@@ -80,7 +75,7 @@ def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
             records.append({
                 "来源Sheet": sheet_name, "报表类型": "资产负债表", "年份": year,
                 "项目": standard_name,
-                "所属区块": block_name, # <-- 现在可以正确地打上标签
+                "所属区块": block_name, 
                 "科目类型": subject_type,
                 "期初金额": start_val, "期末金额": end_val
             })
