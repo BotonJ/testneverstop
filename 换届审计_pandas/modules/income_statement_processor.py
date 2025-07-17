@@ -1,82 +1,92 @@
 # /modules/income_statement_processor.py
-import re
+
 import pandas as pd
+import re
 from src.utils.logger_config import logger
-from modules.utils import normalize_name
+from modules.utils import normalize_name, _get_value_from_coord
 
-def process_income_statement(ws_src, sheet_name, yewu_line_map, alias_map_df, net_asset_fallback=None):
+def process_income_statement(sheet, sheet_name, alias_map_df, is_map_df, is_summary_config_df):
     """
-    【最终版 V4 - 忠于经典代码】
-    完整复刻 data_processor-A.py 的健壮逻辑，包括动态行偏移和计算保底。
+    【V2 - Bug修复】
+    - 修正了合计科目类型(subject_type)被错误覆盖为'普通'的BUG。
+    - 使用与资产负债表一致的、更健壮的科目类型判断逻辑。
     """
-    logger.info(f"--- 开始处理业务活动表: '{sheet_name}' (使用最终版健壮逻辑) ---")
+    logger.info(f"--- 开始处理业务活动表: '{sheet_name}' (使用V2'Bug修复'逻辑) ---")
     
-    income_total_aliases = {normalize_name(s) for s in ['收入合计', '一、收 入', '（一）收入合计']}
-    expense_total_aliases = {normalize_name(s) for s in ['费用合计', '二、费 用', '（二）费用合计']}
-    balance_aliases = {normalize_name(s) for s in ['收支结余', '三、收支结余']}
-    net_asset_change_aliases = {normalize_name(s) for s in ['净资产变动额', '五、净资产变动额（若为净资产减少额，以"-"号填列）']}
-    
+    if not is_map_df:
+        logger.warning(f"'{sheet_name}': '业务活动表逐行'配置为空，跳过处理。")
+        return []
+
+    # 从 '业务活动表汇总注入配置' 创建类型查找字典（收入/费用）
+    type_lookup = {}
+    if is_summary_config_df is not None and not is_summary_config_df.empty:
+        for _, row in is_summary_config_df.iterrows():
+            clean_name = normalize_name(row['科目名称'])
+            if clean_name:
+                type_lookup[clean_name] = row['类型']
+
+    # --- [修复] 创建两个独立的查找结构，同 balance_sheet_processor.py ---
+    alias_lookup = {}
+    total_items_set = set() # 专门存放所有类型为'合计'的标准科目名
+    if alias_map_df is not None and not alias_map_df.empty:
+        for _, row in alias_map_df.iterrows():
+            standard_clean = normalize_name(row['标准科目名'])
+            if not standard_clean: continue
+            
+            is_total = '科目类型' in row and str(row['科目类型']).strip() == '合计'
+            if is_total:
+                total_items_set.add(standard_clean)
+            
+            alias_lookup[standard_clean] = standard_clean
+            for col in alias_map_df.columns:
+                if '等价科目名' in col and pd.notna(row[col]):
+                    aliases = [normalize_name(alias) for alias in str(row[col]).split(',')]
+                    for alias in aliases:
+                        if alias: alias_lookup[alias] = standard_clean
+
     records = []
-    found_items = {}
-    year = (re.search(r'(\d{4})', sheet_name) or [None, "未知"])[1]
+    year_match = re.search(r'(\d{4})', sheet_name)
+    year = int(year_match.group(1)) if year_match else "未知"
 
-    mapping_dict = {normalize_name(item.get("字段名","")): item for item in yewu_line_map} if yewu_line_map else {}
+    for yewu_line in is_map_df:
+        subject_name_raw = yewu_line.get('字段名')
+        if not subject_name_raw: continue
 
-    # --- 步骤 1: 遍历mapping配置，提取所有能提取的数据 ---
-    for item_name_clean, row_config in mapping_dict.items():
-        if not item_name_clean: continue
-
-        start_coord = row_config.get("源期初坐标")
-        end_coord = row_config.get("源期末坐标")
+        subject_name_clean = normalize_name(subject_name_raw)
         
-        if pd.notna(start_coord) or pd.notna(end_coord):
-            try:
-                start_val = ws_src[start_coord].value if pd.notna(start_coord) else None
-                end_val = ws_src[end_coord].value if pd.notna(end_coord) else None
-                
-                found_items[item_name_clean] = {"本期": end_val, "上期": start_val}
-                
-                subject_type = '普通'
-                standard_name = item_name_clean
-                if item_name_clean in income_total_aliases:
-                    standard_name = normalize_name('收入合计')
-                    subject_type = '合计'
-                elif item_name_clean in expense_total_aliases:
-                    standard_name = normalize_name('费用合计')
-                    subject_type = '合计'
+        # --- [修复] 两步式判断，确保类型正确 ---
+        # 第1步：确定标准名称
+        standard_name = alias_lookup.get(subject_name_clean, subject_name_raw) # 保留原始名以防万一
+        
+        # 第2步：根据标准名称，使用 total_items_set 判断其类型
+        subject_type = '合计' if normalize_name(standard_name) in total_items_set else '普通'
+        
+        # 使用 type_lookup 确定科目分类（收入/费用）
+        item_type = type_lookup.get(normalize_name(standard_name), '')
 
-                records.append({
-                    "来源Sheet": sheet_name, "报表类型": "业务活动表", "年份": year,
-                    "项目": standard_name, "科目类型": subject_type,
-                    "本期金额": end_val, "上期金额": start_val
-                })
-            except Exception as e:
-                logger.warning(f"无法提取'{item_name_clean}'的数据，坐标可能无效。错误: {e}")
+        start_val = _get_value_from_coord(sheet, yewu_line.get('源期初坐标'))
+        end_val = _get_value_from_coord(sheet, yewu_line.get('源期末坐标'))
 
-    # --- 步骤 2: “提取优先，计算保底”逻辑 ---
-    found_balance = any(alias in found_items and found_items[alias]["本期"] is not None for alias in balance_aliases)
-    if not found_balance:
-        income_val = found_items.get(normalize_name('收入合计'), {}).get('本期', 0)
-        expense_val = found_items.get(normalize_name('费用合计'), {}).get('本期', 0)
-        calculated_balance = (pd.to_numeric(income_val, errors='coerce') or 0) - (pd.to_numeric(expense_val, errors='coerce') or 0)
+        record = {
+            "来源Sheet": sheet_name, "报表类型": "业务活动表", "年份": year,
+            "项目": standard_name, "所属区块": item_type, "科目类型": subject_type, # 使用修复后的 subject_type
+            "类型": item_type, "期初金额": start_val, "期末金额": end_val
+        }
+        records.append(record)
+
+    # 自动计算“净资产变动额”
+    try:
+        income_total = sum(r['期末金额'] for r in records if r.get('类型') == '收入' and pd.notna(r.get('期末金额')))
+        expense_total = sum(r['期末金额'] for r in records if r.get('类型') == '费用' and pd.notna(r.get('期末金额')))
+        net_change = income_total - expense_total
+        logger.info(f"自动计算'净资产变动额'完成，值为: {net_change}")
         records.append({
             "来源Sheet": sheet_name, "报表类型": "业务活动表", "年份": year,
-            "项目": "收支结余", "科目类型": "合计",
-            "本期金额": calculated_balance, "上期金额": None
+            "项目": "净资产变动额", "所属区块": "结余", "科目类型": "合计", "类型": "结余",
+            "期初金额": None, "期末金额": net_change
         })
-        logger.info(f"自动计算'收支结余'完成，值为: {calculated_balance}")
-
-    found_net_asset_change = any(alias in found_items and found_items[alias]["本期"] is not None for alias in net_asset_change_aliases)
-    if not found_net_asset_change and net_asset_fallback:
-        start_net = pd.to_numeric(net_asset_fallback.get('期初净资产'), errors='coerce') or 0
-        end_net = pd.to_numeric(net_asset_fallback.get('期末净资产'), errors='coerce') or 0
-        calculated_change = end_net - start_net
-        records.append({
-            "来源Sheet": sheet_name, "报表类型": "业务活动表", "年份": year,
-            "项目": "净资产变动额", "科目类型": "合计",
-            "本期金额": calculated_change, "上期金额": None
-        })
-        logger.info(f"自动计算'净资产变动额'完成，值为: {calculated_change}")
+    except Exception as e:
+        logger.warning(f"自动计算'净资产变动额'失败: {e}")
 
     logger.info(f"--- 业务活动表 '{sheet_name}' 处理完成，最终生成 {len(records)} 条记录。---")
     return records

@@ -1,4 +1,5 @@
 # /modules/balance_sheet_processor.py
+
 import re
 import pandas as pd
 from src.utils.logger_config import logger
@@ -16,29 +17,35 @@ def _get_row_and_col_from_address(address):
 
 def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
     """
-    【最终版 V3 - 智能推断】
-    1. 不再需要'科目搜索列'，改为从'起始单元格'动态推断。
-    2. 严格按照“区块”处理，为每条数据打上正确的“所属区块”标签。
+    【V3.3 - 最终版】
+    - 保留配置表的完整性，不再要求用户删除合计行。
+    - 智能判断'聚合区块'和'单一合计项'，并正确标记'所属区块'。
     """
-    logger.info(f"--- 开始处理资产负债表: '{sheet_name}' (使用最终版'智能推断'逻辑) ---")
+    logger.info(f"--- 开始处理资产负债表: '{sheet_name}' (使用V3.3'最终版'逻辑) ---")
     if blocks_df is None or blocks_df.empty: 
         logger.warning(f"'{sheet_name}': '资产负债表区块'配置为空，跳过处理。")
         return []
+    
+    if '合计项名称' not in blocks_df.columns:
+        logger.warning(f"配置警告: '资产负债表区块' Sheet页缺少 '合计项名称' 列，内部分项核对可能不准确。")
+        blocks_df['合计项名称'] = None
 
     alias_lookup = {}
+    total_items_set = set()
     if alias_map_df is not None and not alias_map_df.empty:
         for _, row in alias_map_df.iterrows():
             standard_clean = normalize_name(row['标准科目名'])
             if not standard_clean: continue
             
-            subj_type = '合计' if '科目类型' in row and str(row['科目类型']).strip() == '合计' else '普通'
-            alias_lookup[standard_clean] = (standard_clean, subj_type)
+            if '科目类型' in row and str(row['科目类型']).strip() == '合计':
+                total_items_set.add(standard_clean)
             
+            alias_lookup[standard_clean] = standard_clean
             for col in alias_map_df.columns:
                 if '等价科目名' in col and pd.notna(row[col]):
                     aliases = [normalize_name(alias) for alias in str(row[col]).split(',')]
                     for alias in aliases:
-                        if alias: alias_lookup[alias] = (standard_clean, subj_type)
+                        if alias: alias_lookup[alias] = standard_clean
 
     records = []
     year = (re.search(r'(\d{4})', sheet_name) or [None, "未知"])[1]
@@ -51,10 +58,12 @@ def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
         end_row, _ = _get_row_and_col_from_address(block_row['终止单元格'])
 
         if not start_row or not end_row or not search_col:
-            logger.warning(f"处理区块'{block_name}'时，起始/终止单元格格式不正确或无法提取搜索列，已跳过。")
+            logger.warning(f"处理区块'{block_name}'时，起始/终止单元格格式不正确，已跳过。")
             continue
-
-        logger.debug(f"处理区块'{block_name}': 在'{search_col}'列, 扫描行 {start_row}-{end_row}")
+        
+        block_tag = block_row.get('合计项名称')
+        if pd.isna(block_tag):
+             block_tag = block_name
 
         for r_idx in range(start_row, end_row + 1):
             cell_val = ws_src[f"{search_col}{r_idx}"].value
@@ -63,19 +72,19 @@ def process_balance_sheet(ws_src, sheet_name, blocks_df, alias_map_df):
             subject_name_clean = normalize_name(cell_val)
             if not subject_name_clean: continue
 
-            if subject_name_clean in alias_lookup:
-                standard_name, subject_type = alias_lookup[subject_name_clean]
-            else:
-                standard_name, subject_type = subject_name_clean, '普通'
+            standard_name = alias_lookup.get(subject_name_clean, subject_name_clean)
+            subject_type = '合计' if standard_name in total_items_set else '普通'
 
-            start_val_col, end_val_col = block_row['源期初列'], block_row['源期末列']
-            start_val = ws_src[f"{start_val_col}{r_idx}"].value
-            end_val = ws_src[f"{end_val_col}{r_idx}"].value
+            if start_row == end_row:
+                subject_type = '合计'
 
+            start_val = ws_src[f"{block_row['源期初列']}{r_idx}"].value
+            end_val = ws_src[f"{block_row['源期末列']}{r_idx}"].value
+            
             records.append({
                 "来源Sheet": sheet_name, "报表类型": "资产负债表", "年份": year,
                 "项目": standard_name,
-                "所属区块": block_name, 
+                "所属区块": block_tag,
                 "科目类型": subject_type,
                 "期初金额": start_val, "期末金额": end_val
             })
