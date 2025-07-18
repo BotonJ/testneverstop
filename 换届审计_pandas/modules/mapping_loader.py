@@ -63,3 +63,18 @@ def load_full_mapping_as_df(path):
         return pd.read_excel(path, sheet_name=None)
     except FileNotFoundError:
         return None
+    
+def parse_header_mapping(df: pd.DataFrame):
+    """【V2 - 修复版】根据用户实际的HeaderMapping列结构，精确解析配置。"""
+    if df is None or df.empty: return {}
+    header_meta = {"资产负债表": {}, "业务活动表": {}}
+    target_columns = {"目标资产负债表单元格": "资产负债表", "目标业务活动表单元格": "业务活动表"}
+    for _, row in df.iterrows():
+        field_name, rule = row.get("字段名"), row.get("规则")
+        if pd.isna(field_name): continue
+        field_name, rule = str(field_name).strip(), str(rule).strip() if pd.notna(rule) else ""
+        for col_name, report_type in target_columns.items():
+            target_cell = row.get(col_name)
+            if pd.notna(target_cell):
+                header_meta[report_type][field_name] = {"target_cell": str(target_cell).strip(), "rule": rule}
+    return header_meta
