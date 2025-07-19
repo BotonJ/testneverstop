@@ -1,0 +1,46 @@
+全局扫描问题与建议清单
+【高优先级】明确的冲突和潜在BUG
+问题 (BUG)：format_yewu.py 中“收支结余”计算的硬编码查找
+位置: /src/report_formatters/format_yewu.py, 第29-30行。
+描述: 如我们之前所讨论，代码硬编码查找带空格的 收 入 合 计 和 费 用 合 计，这与您在 mapping_file 中已经清洗过的无空格 字段名 直接冲突，是导致“收支结余”计算失败的根本原因。
+影响: 关键计算失败，报告数据不准确。
+问题 (潜在BUG)：format_biz_summary.py 中数据提取列写死
+位置: /src/report_formatters/format_biz_summary.py, 第22行。
+描述: amount = row[3].value # D列是本期金额 这行代码假设在内存“预制件”中，本期金额永远在第4列（D列）。然而，创建这个预制件的 _create_prebuilt_workbook_in_memory 函数在填充业务活动表时，是按坐标 (F10, F12...) 填充的，并没有一个标准化的列式结构。如果某个科目的坐标不在D列，这里就会提取到错误数据或None。
+影响: “收入汇总”和“支出汇总”表的数据可能不完整或完全错误。
+问题 (潜在BUG)：format_change_tables.py 中数据提取列同样写死
+位置: /src/report_formatters/format_change_tables.py, _inject_table1 函数内第130-131行。
+描述: val_init = start_row_data.iloc[0, 2] 和 val_final = end_row_data.iloc[0, 3] 假设在从预制件转换来的DataFrame里，期初在第3列，期末在第4列。尽管 _create_prebuilt_workbook_in_memory 函数确实是按这个顺序 (A:项目, B:期初, C:期末) 创建的资产负债表预制件，但这种“跨文件”的隐式约定非常脆弱，一旦预制件的创建逻辑微调，这里就会出错。
+影响: “资产负债变动”表中的数据可能错乱。
+【中优先级】硬编码与健壮性问题 (软控制机会)
+这些是您特别关注的地方。将这些硬编码转换为由 mapping_file 控制，将极大提升系统的灵活性和健壮性。
+问题 (硬编码)：核心勾稽关系中的科目名称写死
+位置: /src/data_validator.py, _check_core_equalities 函数内。
+描述: 代码写死了 资产总计, 负债合计, 净资产合计 这三个核心科目名称。如果某套报表中使用了别名（例如 资产合计），即使 alias_map 里有映射，这里的检查也会因为找不到硬编码的名称而失败。
+建议: 创建一个名为 核心科目配置 的新Sheet或在现有配置中增加一列，用于定义哪些科目是用于核心平衡检查的。例如 {'asset_total_items': ['资产总计', '资产合计'], 'liability_total_items': [...]}。
+问题 (硬编码)：汇总表中的“合计”字符串写死
+位置: /src/report_formatters/format_biz_summary.py, _create_pivot_and_inject 函数内。
+描述: pivot['合计'] = ... 和 pivot.loc['合计'] = ...。代码写死了总计行的名称为“合计”。如果模板需要英文（"Total"）或有其他特殊要求，就需要修改代码。
+建议: 可以在 mapping_file 的某个全局配置区域定义 total_row_name: "合计"。
+问题 (硬编码)：data_validator.py 中的容差值 atol=0.01
+位置: /src/data_validator.py, 分散在 _check_subtotals 和 _check_core_equalities 中。
+描述: 所有财务数据比对的容差（绝对误差）都硬编码为 0.01。对于金额巨大的报表，这个容差可能太小；对于精度要求非常高的场景，可能又太大。
+建议: 在 mapping_file 中增加一个全局配置项，如 validation_tolerance: 0.01，允许用户根据需要调整。
+问题 (硬编码)：模板Sheet页名称写死
+位置: 多处，例如 report_generator.py 中的 wb_final["资产负债表"], format_change_tables.py 中的 wb_to_fill['资产负债变动'] 等。
+描述: 代码中大量写死了作为模板的Sheet页名称。如果用户提供的模板文件中这些Sheet名称有变动（例如 资产负债表模板），程序就会失败。
+建议: 创建一个 模板结构配置 Sheet，定义好源模板中各个基础Sheet的名称，例如 {'balance_sheet_template_name': '资产负债表', 'income_statement_template_name': '业务活动表', ...}。
+【低优先级】逻辑疑问与可读性/维护性优化点
+这些是我在理解代码时产生疑问，或者认为可以优化以方便未来维护的地方。
+疑问/待确认: balance_sheet_processor.py 中对单行区块的特殊处理
+位置: /modules/balance_sheet_processor.py, 第71行。
+描述: 代码中有这样一段 if start_row == end_row: subject_type = '合计'。这似乎是一个特殊的规则：如果一个“区块”在配置中只占一行，那么无论 科目等价映射 中如何定义，都强制将其类型标记为“合计”。
+我的疑问: 请问这个逻辑是否符合您的预期？它是一个为了处理某种特殊报表格式而加入的“补丁”吗？这使得科目的最终类型依赖于两个配置（科目等价映射 和 资产负债表区块），可能会让未来的调试稍微复杂一些。
+疑问/待确认: data_processor.py 的职责定位
+位置: /src/data_processor.py
+描述: 这个文件目前只做了一件事：计算每年的 净资产变动额。而 income_statement_processor.py 也会计算一个“净资产变动额”（通过收支差额）。同时，还有一个 data_validator.py 专门负责校验。
+我的疑问: data_processor.py 的长期定位是什么？它未来会扩展成所有“二次计算”（基于 raw_df 的计算）的中心吗？当前它的功能非常单一，或许可以考虑将其逻辑合并到 data_validator.py 或主流程中，以减少文件数量。这并非Bug，只是一个关于项目结构的问题。
+疑问/可读性: format_change_tables.py 中 _parse_config_and_data 的复杂性
+位置: /src/report_formatters/format_change_tables.py
+描述: 这个函数用于将一个单一的DataFrame（例如 inj1）分割成头部的“键值对配置”和主体的“数据映射表”。这种格式将两种不同结构的信息混在一个Sheet中。
+建议/疑问: 这种 inj1, inj2 的配置格式是否是历史遗留？如果未来要重构，可以考虑将头部的键值对（如 start_sheet）分离到一个专门的“全局配置”Sheet中，让 inj 系列Sheet只包含纯粹的数据映射表。这将使解析逻辑大大简化，配置也更清晰。

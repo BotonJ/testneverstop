@@ -1,6 +1,35 @@
-2025-07-18 18:24:24,689 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:24 - --- 开始处理资产负债表: '2019资产负债表' (使用V3.3'最终版'逻辑) ---
-2025-07-18 18:24:24,689 - AuditReportLogger - WARNING - balance_sheet_processor.process_balance_sheet:30 - 配置警告: '资产负债表区块' Sheet页缺少 '合计项名称' 列，内部分项核对可能不准确。
-2025-07-18 18:24:24,693 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:92 - --- 资产负债表 '2019资产负债表' 处理完成，生成 49 条记录。---
-2025-07-18 18:24:24,695 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:14 - --- 开始处理业务活动表: '2019业务活动表' (使用V2'Bug修复'逻辑) ---
-2025-07-18 18:24:24,699 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:82 - 自动计算'净资产变动额'完成，值为: -166853.71999999997
-2025-07-18 18:24:24,700 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:91 - --- 业务活动表 '2019业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-19 13:08:20,799 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:24 - --- 开始处理资产负债表: '2025年资产负债表' (使用V3.3'最终版'逻辑) ---
+2025-07-19 13:08:20,802 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:105 - --- 资产负债表 '2025年资产负债表' 处理完成，生成 50 条记录。---
+2025-07-19 13:08:20,804 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:14 - --- 开始处理业务活动表: '2025年业务活动表' (使用V2'Bug修复'逻辑) ---
+2025-07-19 13:08:20,806 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:82 - 自动计算'净资产变动额'完成，值为: -207671.14
+2025-07-19 13:08:20,806 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:91 - --- 业务活动表 '2025年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-19 13:08:20,807 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:24 - --- 开始处理资产负债表: '2024年资产负债表' (使用V3.3'最终版'逻辑) ---
+2025-07-19 13:08:20,809 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:105 - --- 资产负债表 '2024年资产负债表' 处理完成，生成 51 条记录。---
+2025-07-19 13:08:20,810 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:14 - --- 开始处理业务活动表: '2024年业务活动表' (使用V2'Bug修复'逻辑) ---
+2025-07-19 13:08:20,812 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:82 - 自动计算'净资产变动额'完成，值为: -99720.63000000006
+2025-07-19 13:08:20,812 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:91 - --- 业务活动表 '2024年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-19 13:08:20,813 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:24 - --- 开始处理资产负债表: '2023年资产负债表' (使用V3.3'最终版'逻辑) ---
+2025-07-19 13:08:20,815 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:105 - --- 资产负债表 '2023年资产负债表' 处理完成，生成 51 条记录。---
+2025-07-19 13:08:20,816 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:14 - --- 开始处理业务活动表: '2023年业务活动表' (使用V2'Bug修复'逻辑) ---
+2025-07-19 13:08:20,818 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:82 - 自动计算'净资产变动额'完成，值为: 385726.20999999985
+2025-07-19 13:08:20,819 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:91 - --- 业务活动表 '2023年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-19 13:08:20,819 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:24 - --- 开始处理资产负债表: '2022年资产负债表' (使用V3.3'最终版'逻辑) ---
+2025-07-19 13:08:20,821 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:105 - --- 资产负债表 '2022年资产负债表' 处理完成，生成 51 条记录。---
+2025-07-19 13:08:20,822 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:14 - --- 开始处理业务活动表: '2022年业务活动表' (使用V2'Bug修复'逻辑) ---
+2025-07-19 13:08:20,824 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:82 - 自动计算'净资产变动额'完成，值为: 49802.639999999956
+2025-07-19 13:08:20,825 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:91 - --- 业务活动表 '2022年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-19 13:08:20,825 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:24 - --- 开始处理资产负债表: '2021年资产负债表' (使用V3.3'最终版'逻辑) ---
+2025-07-19 13:08:20,827 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:105 - --- 资产负债表 '2021年资产负债表' 处理完成，生成 51 条记录。---
+2025-07-19 13:08:20,828 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:14 - --- 开始处理业务活动表: '2021年业务活动表' (使用V2'Bug修复'逻辑) ---
+2025-07-19 13:08:20,830 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:82 - 自动计算'净资产变动额'完成，值为: -190852.41000000003
+2025-07-19 13:08:20,831 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:91 - --- 业务活动表 '2021年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-19 13:08:20,831 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:24 - --- 开始处理资产负债表: '2020年资产负债表' (使用V3.3'最终版'逻辑) ---
+2025-07-19 13:08:20,834 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:105 - --- 资产负债表 '2020年资产负债表' 处理完成，生成 51 条记录。---
+2025-07-19 13:08:20,834 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:14 - --- 开始处理业务活动表: '2020年业务活动表' (使用V2'Bug修复'逻辑) ---
+2025-07-19 13:08:20,837 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:82 - 自动计算'净资产变动额'完成，值为: 188584.47999999998
+2025-07-19 13:08:20,837 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:91 - --- 业务活动表 '2020年业务活动表' 处理完成，最终生成 16 条记录。---
+2025-07-19 13:08:20,837 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:24 - --- 开始处理资产负债表: '2019资产负债表' (使用V3.3'最终版'逻辑) ---
+2025-07-19 13:08:20,840 - AuditReportLogger - INFO - balance_sheet_processor.process_balance_sheet:105 - --- 资产负债表 '2019资产负债表' 处理完成，生成 51 条记录。---
+2025-07-19 13:08:20,841 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:14 - --- 开始处理业务活动表: '2019业务活动表' (使用V2'Bug修复'逻辑) ---
+2025-07-19 13:08:20,842 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:82 - 自动计算'净资产变动额'完成，值为: -166853.71999999997
+2025-07-19 13:08:20,843 - AuditReportLogger - INFO - income_statement_processor.process_income_statement:91 - --- 业务活动表 '2019业务活动表' 处理完成，最终生成 16 条记录。---
